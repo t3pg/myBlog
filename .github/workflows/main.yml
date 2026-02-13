@@ -1,0 +1,39 @@
+name: check-update
+
+on:
+  schedule:
+    - cron: '0 14 * * *'
+  workflow_dispatch:
+
+jobs:
+  check-update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: リポジトリを取り寄せ
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: 最終更新を確かめる
+        id: check
+        run: |
+          LAST_COMMIT_TIME=$(git log -1 --format=%ct)
+          CURRENT_TIME=$(date +%s)
+          HOURS_DIFF=$(( ($CURRENT_TIME - $LAST_COMMIT_TIME) / 3600 ))
+          
+          echo "hours_since_update=$HOURS_DIFF" >> $GITHUB_OUTPUT
+          
+          if [ $HOURS_DIFF -ge 20 ]; then
+            echo "should_notify=true" >> $GITHUB_OUTPUT
+          else
+            echo "should_notify=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: discordに送信
+        if: steps.check.outputs.should_notify == 'true'
+        run: |
+          curl -X POST ${{ secrets.WEBHOOK_URL }} \
+            -H 'Content-Type: application/json' \
+            -d '{
+              "text": "今日も記事を書こう！"
+            }'

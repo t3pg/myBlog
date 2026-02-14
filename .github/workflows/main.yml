@@ -35,5 +35,5 @@ jobs:
           curl -X POST ${{ secrets.WEBHOOK_URL }} \
             -H 'Content-Type: application/json' \
             -d '{
-              "text": "今日も記事を書こう！"
+              "content": "今日も記事を書こう！"
             }'

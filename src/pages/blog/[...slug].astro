@@ -1,49 +1,20 @@
 ---
-import { getCollection, render } from "astro:content";
-import Layout from "../../layouts/Layout.astro";
+import { type CollectionEntry, getCollection, render } from "astro:content";
+import BlogPost from "../../layouts/BlogPost.astro";
 
 export async function getStaticPaths() {
-    const posts = await getCollection("blog");
-    return posts.map((post) => ({
-        params: { slug: post.id.split("/").pop()?.split(".")[0] },
-        props: { post },
-    }));
+	const posts = await getCollection("blog");
+	return posts.map((post) => ({
+		params: { slug: post.id },
+		props: post,
+	}));
 }
+type Props = CollectionEntry<"blog">;
 
-const { post } = Astro.props;
+const post = Astro.props;
 const { Content } = await render(post);
 ---
 
-<Layout title={post.data.title}>
-    <article>
-        <header class="mb-10 pb-6 border-b">
-            <h1 class="text-3xl font-bold text-gray-900 mb-3">
-                {post.data.title}
-            </h1>
-            <div class="flex gap-4 text-sm text-gray-500">
-                <time>{post.data.pubDate.toLocaleDateString("ja-JP")}</time>
-                {
-                    post.data.tags.length > 0 && (
-                        <div class="flex gap-2">
-                            {post.data.tags.map((tag) => (
-                                <span class="bg-gray-100 px-2 py-0.5 rounded text-xs">
-                                    #{tag}
-                                </span>
-                            ))}
-                        </div>
-                    )
-                }
-            </div>
-        </header>
-
-        <div
-            class="prose prose-gray max-w-none prose-headings:font-bold prose-a:text-blue-600 prose-img:rounded-lg"
-        >
-            <Content />
-        </div>
-    </article>
-
-    <div class="mt-16 pt-8 border-t">
-        <a href="/" class="text-blue-600 hover:underline">← Topへ戻る</a>
-    </div>
-</Layout>
+<BlogPost {...post.data}>
+	<Content />
+</BlogPost>

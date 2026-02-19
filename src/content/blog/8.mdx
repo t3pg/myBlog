@@ -1,0 +1,46 @@
+---
+title: "ブログのフォント選定"
+pubDate: 2026-02-19
+description: ""
+tags: ["フォント","開発"]
+---
+# フォント比較は沼
+
+StarlightではデフォルトでAtkinson Hyperlegibleというフォントが使用されているが、あまり日本語記事には適していないと思ったので別のフォントを使うことにした。
+
+代表的なフォントを比較すると以下のような感じになった。(自分の環境で表示できる物のみ)
+
+<style>
+{`
+  @font-face {
+    font-family: "Atkinson";
+    src: url("/fonts/atkinson-bold.woff") format("woff");
+    font-weight: 700;
+  }
+
+  .atkinson {
+    font-family: "Atkinson", sans-serif;
+  }
+`}
+</style>
+<h1 style={{ fontFamily: "Atkinson" }}>Atkinson Hyperlegible</h1>
+<p style={{ fontFamily: "Atkinson" }}>ABCabc012あいう漢字</p>
+<h1 style={{ fontFamily: "Noto Sans JP" }}>Noto Sans JP</h1>
+<p style={{ fontFamily: "Noto Sans JP" }}>ABCabc012あいう漢字</p>
+<h1 style={{ fontFamily: "Noto Serif JP" }}>Noto Serif JP</h1>
+<p style={{ fontFamily: "Noto Serif JP" }}>ABCabc012あいう漢字</p>
+<h1 style={{ fontFamily: "游明朝" }}>游明朝</h1>
+<p style={{ fontFamily: "游明朝" }}>ABCabc012あいう漢字</p>
+<h1 style={{ fontFamily: "游ゴシック" }}>游ゴシック</h1>
+<p style={{ fontFamily: "游ゴシック" }}>ABCabc012あいう漢字</p>
+<h1 style={{ fontFamily: "Meiryo" }}>メイリオ</h1>
+<p style={{ fontFamily: "Meiryo" }}>ABCabc012あいう漢字</p>
+<h1 style={{ fontFamily: "Segoe UI" }}>Segoe UI</h1>
+<p style={{ fontFamily: "Segoe UI" }}>ABCabc012あいう漢字</p>
+
+この中だとNoto Sans JPが読みやすく、記事の雰囲気にもあっていると思ったのでこれを使うことにした。
+
+本当は明朝体も好きなのだが、技術系ブログには合わないかな…
+
+
+

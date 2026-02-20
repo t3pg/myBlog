@@ -9,7 +9,7 @@ import starlight from '@astrojs/starlight';
 
 // https://astro.build/config
 export default defineConfig({
-	site: 'https://example.com',
+	site: 'https://t-log.pages.dev',
 	integrations: [astroExpressiveCode(), mdx(), sitemap(), starlight({
 		title: 't-log'
 	})],

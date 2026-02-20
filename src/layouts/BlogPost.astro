@@ -9,19 +9,11 @@ import Header from "../components/Header.astro";
 type Props = CollectionEntry<"blog">["data"];
 
 const { title, description, pubDate, updatedDate } = Astro.props;
-const heroImage =
-	"https://pub-e6ff8f38dbb24bb0bef4e304eb94a5de.r2.dev/heroImage.avif";
 ---
 
 <html lang="ja">
 	<head>
 		<BaseHead title={title} description={description} />
-
-		<meta property="og:image" content={heroImage} />
-		<meta property="og:title" content={title} />
-		<meta property="og:description" content={description} />
-		<meta property="og:type" content="article" />
-		<meta property="og:site_name" content="t-log" />
 
 		<style>
 			main {

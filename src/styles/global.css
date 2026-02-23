@@ -109,6 +109,14 @@ p {
 	margin-bottom: 2em;
 }
 
+.prose img {
+	max-width: 720px;
+	max-height: 360px;
+	object-fit: contain;
+	display: block;
+	margin: 0 auto;
+}
+
 textarea {
 	width: 100%;
 	font-size: 16px;

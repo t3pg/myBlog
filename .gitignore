@@ -25,3 +25,6 @@ pnpm-debug.log*
 
 #下書き
 src/content/blog/drafts/
+
+#テンプレート
+src/content/blog/template.md

@@ -1,7 +1,12 @@
 // 環境変数DISCORD_WEBHOOK
 
 
-const webhookUrl = process.env.DISCORD_WEBHOOK;
+const webhookUrl = env.DISCORD_WEBHOOK;
+
+if (!webhookUrl) {
+    console.error('Error: DISCORD_WEBHOOK environment variable is not set');
+    process.exit(1);
+}
 
 
 const deployedAt = new Date().toLocaleString('ja-JP', { timeZone: 'Asia/Tokyo' });

@@ -1,13 +1,8 @@
 ---
-import fs from "fs";
-import { fileURLToPath } from "url";
 import BaseHead from "../../components/BaseHead.astro";
 import Footer from "../../components/Footer.astro";
 import Header from "../../components/Header.astro";
-
-const csvPath = fileURLToPath(new URL("./books.csv", import.meta.url));
-
-const raw = fs.readFileSync(csvPath, "utf-8");
+import raw from "./books.csv?raw";
 
 const lines = raw
 	.trim()

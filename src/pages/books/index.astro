@@ -1,11 +1,11 @@
 ---
 import fs from "fs";
-import path from "path";
+import { fileURLToPath } from "url";
 import BaseHead from "../../components/BaseHead.astro";
 import Footer from "../../components/Footer.astro";
 import Header from "../../components/Header.astro";
 
-const csvPath = path.resolve("src\\pages\\books\\books.csv");
+const csvPath = fileURLToPath(new URL("./books.csv", import.meta.url));
 
 const raw = fs.readFileSync(csvPath, "utf-8");
 

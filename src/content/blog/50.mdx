@@ -1,0 +1,26 @@
+---
+title: "Webカメラを使ってみる"
+pubDate: 2026-04-08
+description: ""
+tags: ["JavaScript","開発"]
+---
+export const captureScript = `
+  navigator.mediaDevices.getUserMedia({ video: true })
+    .then(stream => document.getElementById("video").srcObject = stream);
+`;
+
+<video id="video" width="640" height="480" margin="auto" autoplay></video><br />
+<script set:html={captureScript}></script>
+Webカメラを利用するゲームを作りたかったのでまずカメラ利用のテスト。
+コードはこんな感じ
+```js
+export const captureScript = `
+  navigator.mediaDevices.getUserMedia({ video: true })
+    .then(stream => document.getElementById("video").srcObject = stream);
+`;
+
+<video id="video" width="640" height="480" margin="auto" autoplay></video><br />
+<script set:html={captureScript}></script>
+```
+```{}```がMDXのパーサーと衝突し、普通に書くと```Unexpected content after expression```というエラーが出てしまった。
+そのため、スクリプトの部分を文字列として切り出すことで解決した。

@@ -1,0 +1,16 @@
+---
+title: "BlenderとClaudeを接続しAIモデリング"
+pubDate: 2026-04-12
+description: ""
+tags: ["Blender"]
+---
+[BlenderMCP](https://github.com/ahujasid/blender-mcp) を導入し、BlenderをClaudeから操作できるようにした。
+Claudeからはコードを実行して図形の配置やアニメーションの設定を行ったり、スクリーンショットを確認することができるらしい。
+実際に試してみたところ、幾何学的な図形を用いたモデリングなら割とうまくできた。また、アニメーションが破綻したりモデルの位置がおかしくなることもあったが、指摘することで修正できた。
+
+
+作った動画は以下、すべてClaudeが編集し、僕は命令のみ行った。
+<video  width="640" height="360" src="https://media.t-3.dev/4-13.mp4" controls autoplay="" playsinline="" preload="auto"></video>
+カメラワークが微妙…
+
+複雑なものを作ろうとすると時間がかかりトークンも大量に消費するため、この程度なら自分で作ったほうが良いかもしれない。

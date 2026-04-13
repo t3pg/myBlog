@@ -1,0 +1,53 @@
+---
+interface Props {
+	/** 動画ファイルのパス（例: /videos/demo.mp4） */
+	src: string;
+	/** MIME タイプ（省略時は拡張子から自動判定） */
+	type?: string;
+	/** 動画下に表示するキャプション */
+	caption?: string;
+}
+
+const { src, type, caption } = Astro.props;
+
+function getMimeType(src: string, type?: string): string {
+	if (type) return type;
+	const ext = src.split(".").pop()?.toLowerCase() ?? "";
+	const map: Record<string, string> = {
+		mp4: "video/mp4",
+		webm: "video/webm",
+		ogg: "video/ogg",
+		ogv: "video/ogg",
+		mov: "video/quicktime",
+	};
+	return map[ext] ?? "video/mp4";
+}
+
+const mimeType = getMimeType(src, type);
+---
+
+<figure class="video-figure">
+	<video controls playsinline>
+		<source src={src} type={mimeType} />
+		<p>お使いのブラウザは video タグに対応していません。</p>
+	</video>
+	{caption && <figcaption>{caption}</figcaption>}
+</figure>
+
+<style>
+	.video-figure {
+		margin: 1.5em 0;
+	}
+	video {
+		width: 100%;
+		height: auto;
+		border-radius: 8px;
+		display: block;
+	}
+	figcaption {
+		margin-top: 0.4em;
+		text-align: center;
+		font-size: 0.85em;
+		color: rgb(var(--gray));
+	}
+</style>

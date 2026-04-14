@@ -1,0 +1,125 @@
+---
+import { type CollectionEntry, getCollection } from "astro:content";
+import BaseHead from "../../../../components/BaseHead.astro";
+import Footer from "../../../../components/Footer.astro";
+import FormattedDate from "../../../../components/FormattedDate.astro";
+import Header from "../../../../components/Header.astro";
+import Sidebar from "../../../../components/Sidebar.astro";
+import { SITE_TITLE } from "../../../../consts";
+
+export async function getStaticPaths() {
+	const posts = await getCollection("blog");
+	const monthMap = new Map<string, CollectionEntry<"blog">[]>();
+
+	posts.forEach((post) => {
+		const d = post.data.pubDate;
+		const year = d.getFullYear().toString();
+		const month = String(d.getMonth() + 1).padStart(2, "0");
+		const key = `${year}/${month}`;
+		if (!monthMap.has(key)) monthMap.set(key, []);
+		monthMap.get(key)!.push(post);
+	});
+
+	return [...monthMap.entries()].map(([key, monthPosts]) => {
+		const [year, month] = key.split("/");
+		return {
+			params: { year, month },
+			props: {
+				posts: monthPosts.sort(
+					(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+				),
+			},
+		};
+	});
+}
+
+interface Props {
+	posts: CollectionEntry<"blog">[];
+}
+
+const { year, month } = Astro.params;
+const { posts } = Astro.props;
+const label = `${year}年${parseInt(month)}月`;
+---
+
+<!doctype html>
+<html lang="ja">
+	<head>
+		<BaseHead
+			title={`${label} | ${SITE_TITLE}`}
+			description={`${label}の記事一覧`}
+		/>
+		<style>
+			.post-list {
+				list-style: none;
+				padding: 0;
+				margin: 0;
+				display: flex;
+				flex-direction: column;
+				gap: 1rem;
+			}
+			.post-list li a {
+				display: flex;
+				justify-content: space-between;
+				align-items: baseline;
+				gap: 1em;
+				text-decoration: none;
+				padding: 0.75em 1em;
+				border-radius: 8px;
+				transition: background 0.15s;
+			}
+			.post-list li a:hover {
+				background: rgb(var(--gray-light));
+			}
+			.post-title {
+				color: rgb(var(--black));
+				font-weight: 600;
+				line-height: 1.3;
+			}
+			.post-list li a:hover .post-title {
+				color: var(--accent);
+			}
+			.post-date {
+				color: rgb(var(--gray));
+				font-size: 0.85em;
+				white-space: nowrap;
+				flex-shrink: 0;
+			}
+			.back {
+				display: inline-block;
+				margin-top: 2em;
+				color: rgb(var(--gray));
+				font-size: 0.9em;
+				text-decoration: none;
+			}
+			.back:hover {
+				color: var(--accent);
+			}
+		</style>
+	</head>
+	<body>
+		<Header />
+		<div class="layout-wrapper">
+			<main>
+				<h1>{label}</h1>
+				<ul class="post-list">
+					{
+						posts.map((post) => (
+							<li>
+								<a href={`/blog/${post.id.split("/").pop()}/`}>
+									<span class="post-title">{post.data.title}</span>
+									<span class="post-date">
+										<FormattedDate date={post.data.pubDate} />
+									</span>
+								</a>
+							</li>
+						))
+					}
+				</ul>
+				<a class="back" href="/blog/">← 記事一覧へ</a>
+			</main>
+			<Sidebar />
+		</div>
+		<Footer />
+	</body>
+</html>

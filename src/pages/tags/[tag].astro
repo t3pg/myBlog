@@ -4,6 +4,7 @@ import BaseHead from "../../components/BaseHead.astro";
 import Footer from "../../components/Footer.astro";
 import FormattedDate from "../../components/FormattedDate.astro";
 import Header from "../../components/Header.astro";
+import Sidebar from "../../components/Sidebar.astro";
 import { SITE_TITLE } from "../../consts";
 
 export async function getStaticPaths() {
@@ -108,6 +109,7 @@ const description = tagEntry?.data.description ?? "";
 	</head>
 	<body>
 		<Header />
+		<div class="layout-wrapper">
 		<main>
 			<div class="tag-heading">
 				<h1>{tag}</h1>
@@ -118,7 +120,7 @@ const description = tagEntry?.data.description ?? "";
 				{
 					posts.map((post) => (
 						<li>
-							<a href={`/blog/${post.id}/`}>
+							<a href={`/blog/${post.id.split("/").pop()}/`}>
 								<span class="post-title">{post.data.title}</span>
 								<span class="post-date">
 									<FormattedDate date={post.data.pubDate} />
@@ -130,6 +132,8 @@ const description = tagEntry?.data.description ?? "";
 			</ul>
 			<a class="back" href="/tags/">← タグ一覧へ</a>
 		</main>
+		<Sidebar />
+		</div>
 		<Footer />
 	</body>
 </html>

@@ -1,0 +1,190 @@
+---
+import { getCollection } from "astro:content";
+import FormattedDate from "./FormattedDate.astro";
+
+const allPosts = await getCollection("blog");
+const sorted = [...allPosts].sort(
+	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+);
+
+// 最近の記事 (5件)
+const recentPosts = sorted.slice(0, 5);
+
+// タグ一覧
+const tagCounts = new Map<string, number>();
+allPosts.forEach((post) => {
+	(post.data.tags ?? []).forEach((tag) => {
+		tagCounts.set(tag, (tagCounts.get(tag) ?? 0) + 1);
+	});
+});
+const sortedTags = [...tagCounts.entries()].sort((a, b) => b[1] - a[1]);
+
+// 月別アーカイブ
+const monthMap = new Map<string, number>();
+allPosts.forEach((post) => {
+	const d = post.data.pubDate;
+	const year = d.getFullYear().toString();
+	const month = String(d.getMonth() + 1).padStart(2, "0");
+	const key = `${year}/${month}`;
+	monthMap.set(key, (monthMap.get(key) ?? 0) + 1);
+});
+const sortedMonths = [...monthMap.entries()].sort((a, b) =>
+	b[0].localeCompare(a[0]),
+);
+---
+
+<aside class="sidebar">
+	<!-- プロフィール -->
+	<section class="sidebar-section">
+		<h2 class="sidebar-heading">プロフィール</h2>
+		<div class="profile-placeholder">
+			<!-- 後で追加 -->
+		</div>
+	</section>
+
+	<!-- 最近の記事 -->
+	<section class="sidebar-section">
+		<h2 class="sidebar-heading">最近の記事</h2>
+		<ul class="sidebar-list">
+			{
+				recentPosts.map((post) => (
+					<li>
+						<a href={`/blog/${post.id.split("/").pop()}/`}>
+							{post.data.title}
+						</a>
+					</li>
+				))
+			}
+		</ul>
+	</section>
+
+	<!-- タグ -->
+	<section class="sidebar-section">
+		<h2 class="sidebar-heading">タグ</h2>
+		<div class="tag-cloud">
+			{
+				sortedTags.map(([tag, count]) => (
+					<a href={`/tags/${tag}/`} class="tag-pill">
+						{tag}
+						<span class="tag-count">{count}</span>
+					</a>
+				))
+			}
+		</div>
+	</section>
+
+	<!-- 月別アーカイブ -->
+	<section class="sidebar-section">
+		<h2 class="sidebar-heading">月別アーカイブ</h2>
+		<ul class="sidebar-list">
+			{
+				sortedMonths.map(([key, count]) => {
+					const [year, month] = key.split("/");
+					return (
+						<li>
+							<a href={`/blog/${year}/${month}/`}>
+								{year}年{parseInt(month)}月
+								<span class="archive-count">({count}件)</span>
+							</a>
+						</li>
+					);
+				})
+			}
+		</ul>
+	</section>
+</aside>
+
+<style>
+	.sidebar {
+		display: flex;
+		flex-direction: column;
+		gap: 2rem;
+		min-width: 0;
+	}
+
+	.sidebar-section {
+		background: #fff;
+		border: 1px solid rgb(var(--gray-light));
+		border-radius: 10px;
+		padding: 1.1em 1.2em;
+	}
+
+	.sidebar-heading {
+		font-size: 0.85em;
+		font-weight: 700;
+		letter-spacing: 0.05em;
+		text-transform: uppercase;
+		color: rgb(var(--gray));
+		margin: 0 0 0.8em 0;
+		padding-bottom: 0.5em;
+		border-bottom: 1px solid rgb(var(--gray-light));
+	}
+
+	.profile-placeholder {
+		height: 80px;
+		background: rgb(var(--gray-light));
+		border-radius: 8px;
+	}
+
+	.sidebar-list {
+		list-style: none;
+		padding: 0;
+		margin: 0;
+		display: flex;
+		flex-direction: column;
+		gap: 0.4em;
+	}
+
+	.sidebar-list li a {
+		display: flex;
+		justify-content: space-between;
+		align-items: baseline;
+		gap: 0.5em;
+		text-decoration: none;
+		color: rgb(var(--gray-dark));
+		font-size: 0.88em;
+		line-height: 1.4;
+		padding: 0.2em 0;
+		transition: color 0.15s;
+	}
+
+	.sidebar-list li a:hover {
+		color: var(--accent);
+	}
+
+	.archive-count {
+		color: rgb(var(--gray));
+		font-size: 0.85em;
+		white-space: nowrap;
+		flex-shrink: 0;
+	}
+
+	.tag-cloud {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.4em;
+	}
+
+	.tag-pill {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.25em;
+		padding: 0.2em 0.65em;
+		background: rgb(var(--gray-light));
+		border-radius: 9999px;
+		text-decoration: none;
+		color: rgb(var(--gray-dark));
+		font-size: 0.78em;
+		transition: background 0.2s, color 0.2s;
+	}
+
+	.tag-pill:hover {
+		background: var(--accent);
+		color: #fff;
+	}
+
+	.tag-count {
+		opacity: 0.6;
+		font-size: 0.85em;
+	}
+</style>

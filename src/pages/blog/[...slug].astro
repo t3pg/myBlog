@@ -6,7 +6,7 @@ import Video from "../../components/Video.astro";
 export async function getStaticPaths() {
 	const posts = await getCollection("blog");
 	return posts.map((post) => ({
-		params: { slug: post.id },
+		params: { slug: post.id.split("/").pop() },
 		props: post,
 	}));
 }

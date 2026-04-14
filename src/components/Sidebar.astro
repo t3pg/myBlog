@@ -1,6 +1,7 @@
 ---
 import { getCollection } from "astro:content";
 import FormattedDate from "./FormattedDate.astro";
+import { SIDEBAR_TAGS } from "../consts";
 
 const allPosts = await getCollection("blog");
 const sorted = [...allPosts].sort(
@@ -9,15 +10,6 @@ const sorted = [...allPosts].sort(
 
 // 最近の記事 (5件)
 const recentPosts = sorted.slice(0, 5);
-
-// タグ一覧
-const tagCounts = new Map<string, number>();
-allPosts.forEach((post) => {
-	(post.data.tags ?? []).forEach((tag) => {
-		tagCounts.set(tag, (tagCounts.get(tag) ?? 0) + 1);
-	});
-});
-const sortedTags = [...tagCounts.entries()].sort((a, b) => b[1] - a[1]);
 
 // 月別アーカイブ
 const monthMap = new Map<string, number>();
@@ -63,14 +55,14 @@ const sortedMonths = [...monthMap.entries()].sort((a, b) =>
 		<h2 class="sidebar-heading">タグ</h2>
 		<div class="tag-cloud">
 			{
-				sortedTags.map(([tag, count]) => (
+				SIDEBAR_TAGS.map((tag) => (
 					<a href={`/tags/${tag}/`} class="tag-pill">
 						{tag}
-						<span class="tag-count">{count}</span>
 					</a>
 				))
 			}
 		</div>
+		<a href="/tags/" class="all-tags-link">タグ一覧をすべて見る →</a>
 	</section>
 
 	<!-- 月別アーカイブ -->
@@ -183,8 +175,16 @@ const sortedMonths = [...monthMap.entries()].sort((a, b) =>
 		color: #fff;
 	}
 
-	.tag-count {
-		opacity: 0.6;
-		font-size: 0.85em;
+	.all-tags-link {
+		display: block;
+		margin-top: 0.75em;
+		font-size: 0.82em;
+		color: rgb(var(--gray));
+		text-decoration: none;
+		transition: color 0.15s;
+	}
+
+	.all-tags-link:hover {
+		color: var(--accent);
 	}
 </style>

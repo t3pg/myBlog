@@ -76,6 +76,15 @@ tags: ["タグ1", "タグ2"] # 省略可
 - `src/consts.ts`: `SITE_TITLE`, `SITE_DESCRIPTION`, `SIDEBAR_TAGS`（サイドバーに表示するタグ一覧）
 - `astro.config.mjs`: インテグレーション設定、サイトマップ優先度設定
 
+## Giscus（コメントシステム）
+
+- 設定箇所: `src/layouts/BlogPost.astro`
+- リポジトリ: `t3pg/myBlog`
+- カテゴリ: `Announcements`
+- マッピング: `pathname`
+- テーマ: `light`（GitHub Light 固定）
+- 言語: `ja`
+
 ## 開発コマンド
 
 ```bash

@@ -339,9 +339,9 @@ hr {
 /* 画像: 一般的な OGP ヒーロー比率 16:9 に固定 */
 .remark-link-card-plus__image {
 	width: 100%;
-	aspect-ratio: 16 / 9;
-	object-fit: cover;
-	border-radius: 0; /* カードの角丸で十分なためリセット */
+	height: 100%;
+	object-fit: cover; /* 短辺に合わせてクロップし、余白なしで埋める */
+	border-radius: 0;  /* カードの角丸で十分なためリセット */
 	display: block;
 }
 

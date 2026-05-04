@@ -6,13 +6,15 @@ import Footer from "../components/Footer.astro";
 import FormattedDate from "../components/FormattedDate.astro";
 import Header from "../components/Header.astro";
 import Sidebar from "../components/Sidebar.astro";
+import Share from "../components/Share.astro";
 
 type Props = CollectionEntry<"blog">["data"] & {
 	prev?: CollectionEntry<"blog">;
 	next?: CollectionEntry<"blog">;
 };
 
-const { title, description, pubDate, updatedDate, tags, prev, next } = Astro.props;
+const { title, description, pubDate, updatedDate, tags, prev, next } =
+	Astro.props;
 ---
 
 <html lang="ja">
@@ -67,7 +69,9 @@ const { title, description, pubDate, updatedDate, tags, prev, next } = Astro.pro
 				text-decoration: none;
 				color: rgb(var(--gray-dark));
 				font-size: 0.8em;
-				transition: background 0.2s, color 0.2s;
+				transition:
+					background 0.2s,
+					color 0.2s;
 			}
 			.tags a:hover {
 				background: var(--accent);
@@ -114,9 +118,9 @@ const { title, description, pubDate, updatedDate, tags, prev, next } = Astro.pro
 	<body>
 		<Header />
 		<div class="layout-wrapper">
-		<main>
-			<article>
-				<!-- <div class="hero-image">
+			<main>
+				<article>
+					<!-- <div class="hero-image">
 					{
 						heroImage && (
 							<Image
@@ -128,79 +132,104 @@ const { title, description, pubDate, updatedDate, tags, prev, next } = Astro.pro
 						)
 					}
 				</div> -->
-				<div class="prose">
-					<div class="title">
-						<div class="date">
-							<FormattedDate date={pubDate} />
+					<div class="prose">
+						<div class="title">
+							<div class="date">
+								<FormattedDate date={pubDate} />
+								{
+									updatedDate && (
+										<div class="last-updated-on">
+											Last updated on{" "}
+											<FormattedDate date={updatedDate} />
+										</div>
+									)
+								}
+							</div>
+							<h1>{title}</h1>
 							{
-								updatedDate && (
-									<div class="last-updated-on">
-										Last updated on{" "}
-										<FormattedDate date={updatedDate} />
+								tags && tags.length > 0 && (
+									<div class="tags">
+										{tags.map((tag) => (
+											<a href={`/tags/${tag}/`}>{tag}</a>
+										))}
 									</div>
 								)
 							}
+							<hr />
 						</div>
-						<h1>{title}</h1>
-						{
-							tags && tags.length > 0 && (
-								<div class="tags">
-									{tags.map((tag) => (
-										<a href={`/tags/${tag}/`}>
-											{tag}
-										</a>
-									))}
-								</div>
-							)
-						}
-						<hr />
-					</div>
-					<slot />
-					<nav class="post-nav">
-						{prev && (
-							<a href={`/blog/${prev.id.split("/").pop()}/`} class="post-nav__prev">
-								<span class="post-nav__label">← 前の記事</span>
-								<span class="post-nav__title">{prev.data.title}</span>
-							</a>
-						)}
-						{next && (
-							<a href={`/blog/${next.id.split("/").pop()}/`} class="post-nav__next">
-								<span class="post-nav__label">次の記事 →</span>
-								<span class="post-nav__title">{next.data.title}</span>
-							</a>
-						)}
-					</nav>
-					<script is:inline>
-						/* リンクカード: OGP 画像の読み込み失敗時にサムネイル欄を非表示 */
-						document.querySelectorAll('.remark-link-card-plus__image').forEach(function(img) {
-							img.addEventListener('error', function() {
-								var thumbnail = img.closest('.remark-link-card-plus__thumbnail');
-								if (thumbnail) thumbnail.style.display = 'none';
-							});
-						});
-					</script>
-					<div class="giscus-wrapper">
-						<script is:inline src="https://giscus.app/client.js"
-							data-repo="t3pg/myBlog"
-							data-repo-id="R_kgDORN6zFw"
-							data-category="Announcements"
-							data-category-id="DIC_kwDORN6zF84C7SvK"
-							data-mapping="pathname"
-							data-strict="0"
-							data-reactions-enabled="1"
-							data-emit-metadata="0"
-							data-input-position="bottom"
-							data-theme="light"
-							data-lang="ja"
-							data-loading="lazy"
-							crossorigin="anonymous"
-							async>
+						<slot />
+						<nav class="post-nav">
+							{
+								prev && (
+									<a
+										href={`/blog/${prev.id.split("/").pop()}/`}
+										class="post-nav__prev"
+									>
+										<span class="post-nav__label">
+											← 前の記事
+										</span>
+										<span class="post-nav__title">
+											{prev.data.title}
+										</span>
+									</a>
+								)
+							}
+							{
+								next && (
+									<a
+										href={`/blog/${next.id.split("/").pop()}/`}
+										class="post-nav__next"
+									>
+										<span class="post-nav__label">
+											次の記事 →
+										</span>
+										<span class="post-nav__title">
+											{next.data.title}
+										</span>
+									</a>
+								)
+							}
+						</nav>
+						<script is:inline>
+							/* リンクカード: OGP 画像の読み込み失敗時にサムネイル欄を非表示 */
+							document
+								.querySelectorAll(
+									".remark-link-card-plus__image",
+								)
+								.forEach(function (img) {
+									img.addEventListener("error", function () {
+										var thumbnail = img.closest(
+											".remark-link-card-plus__thumbnail",
+										);
+										if (thumbnail)
+											thumbnail.style.display = "none";
+									});
+								});
 						</script>
+						<Share link={Astro.url} />
+						<div class="giscus-wrapper">
+							<script
+								is:inline
+								src="https://giscus.app/client.js"
+								data-repo="t3pg/myBlog"
+								data-repo-id="R_kgDORN6zFw"
+								data-category="Announcements"
+								data-category-id="DIC_kwDORN6zF84C7SvK"
+								data-mapping="pathname"
+								data-strict="0"
+								data-reactions-enabled="1"
+								data-emit-metadata="0"
+								data-input-position="bottom"
+								data-theme="light"
+								data-lang="ja"
+								data-loading="lazy"
+								crossorigin="anonymous"
+								async></script>
+						</div>
 					</div>
-				</div>
-			</article>
-		</main>
-		<Sidebar />
+				</article>
+			</main>
+			<Sidebar />
 		</div>
 		<Footer />
 	</body>

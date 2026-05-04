@@ -1,0 +1,106 @@
+---
+import { Icon } from "@astrojs/starlight/components";
+const link = Astro.props.link;
+---
+
+<div class="share">
+    <!-- <a
+        href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(link)}`}
+        target="_blank"
+        rel="noopener noreferrer"
+    >
+        <img src={xLogo.src} alt="X" width="20" height="20" />
+    </a>
+
+    <style>
+        .share {
+            margin: 2em 0 1.5em;
+            text-align: right;
+        }
+        .share a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 2.5rem;
+            height: 2.5rem;
+            background: #ffffff;
+            border: 2px solid #000;
+            border-radius: 50%;
+            text-decoration: none;
+            transition: opacity 0.2s;
+        }
+        .share a:hover {
+            opacity: 0.75;
+        }
+    </style> -->
+    <a href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(link)}`}
+        ><Icon name="x.com" /></a
+    >
+    <a
+        href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(link)}`}
+        ><Icon name="facebook" /></a
+    >
+    <span class="copy-wrap">
+        <a
+            href="#"
+            id="copy-link"
+            onclick={`event.preventDefault();navigator.clipboard.writeText('${link}').then(()=>{var t=document.getElementById('copy-toast');t.classList.add('show');setTimeout(()=>t.classList.remove('show'),1500)})`}
+            >⛓</a
+        >
+        <span id="copy-toast" class="copy-toast">コピーしました</span>
+    </span>
+
+    <style>
+        .share {
+            margin: 2em 0 1.5em;
+            text-align: right;
+        }
+        .share a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 2.5rem;
+            height: 2.5rem;
+            background: #ffffff;
+            border: 2px solid #252525;
+            color: #252525;
+            border-radius: 50%;
+            text-decoration: none;
+            transition: opacity 0.2s;
+        }
+        .share a:hover {
+            opacity: 0.75;
+        }
+        .copy-wrap {
+            position: relative;
+            display: inline-block;
+        }
+        .copy-toast {
+            position: absolute;
+            bottom: calc(100% + 6px);
+            left: 50%;
+            transform: translateX(-50%);
+            background: #252525;
+            color: #fff;
+            font-size: 0.75rem;
+            white-space: nowrap;
+            padding: 4px 8px;
+            border-radius: 4px;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+        .copy-toast::after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 5px solid transparent;
+            border-top-color: #252525;
+        }
+        .copy-toast.show {
+            opacity: 1;
+        }
+    </style>
+</div>

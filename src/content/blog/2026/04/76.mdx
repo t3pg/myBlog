@@ -1,0 +1,21 @@
+---
+title: "記事の共有ボタンを追加"
+pubDate: 2026-05-04
+description: ""
+tags: ["Astro","開発"]
+---
+import { Icon } from '@astrojs/starlight/components';
+
+ブログ記事の共有ボタンを追加した。
+QiitaとZennでどのようなデザインになっているのか確認したら、本文の右下にあったのでそれに倣うことにした。
+
+https://starlight.astro.build/ja/components/icons/
+
+アイコンの表示には、Starlightの```<Icon>```コンポーネントを使用した。
+
+```html
+<Icon name="x.com" />
+```
+と書くとロゴが表示できる。<Icon name="x.com" />
+
+記事の共有ボタンに使えそうなロゴがなかったので、そこだけ鎖の絵文字で代用した。

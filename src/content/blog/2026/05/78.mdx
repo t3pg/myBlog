@@ -1,0 +1,27 @@
+---
+title: "JSでバーコード生成"
+pubDate: 2026-05-06
+description: ""
+tags: ["JavaScript","開発"]
+---
+export const script=`JsBarcode("#barcode", "1234567890", {
+      format: "CODE128",
+      displayValue: true,
+      fontSize: 18,
+      height: 80,
+    });`;
+
+JsBarcodeというライブラリを使用してバーコードを作成した。
+
+https://github.com/lindell/JsBarcode
+
+
+### 例
+    
+<script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"></script>
+
+<svg id="barcode" style="margin:auto;"></svg>
+
+<script set:html={script}></script>
+
+これとバーコードリーダーを組み合わせてゲームを作る予定。

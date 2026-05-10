@@ -36,7 +36,8 @@ export default defineConfig({
 			},
 		}),
 		starlight({
-			title: 't-log'
+			title: 't-log',
+			disable404Route: true,
 		}),
 	],
 	markdown: {

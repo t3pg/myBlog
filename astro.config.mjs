@@ -5,6 +5,7 @@ import sitemap from '@astrojs/sitemap';
 import { defineConfig } from 'astro/config';
 import astroExpressiveCode from 'astro-expressive-code';
 import remarkLinkCard from 'remark-link-card-plus';
+import mermaid from 'astro-mermaid';
 
 import starlight from '@astrojs/starlight';
 
@@ -12,6 +13,7 @@ import starlight from '@astrojs/starlight';
 export default defineConfig({
 	site: 'https://t-log.pages.dev',
 	integrations: [
+		mermaid(),
 		astroExpressiveCode(),
 		mdx(),
 		sitemap({

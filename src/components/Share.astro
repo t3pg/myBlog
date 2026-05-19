@@ -10,7 +10,10 @@ const link = Astro.props.link;
 		rel="noopener"
 		aria-label="Share on X"
 	>
-		<Icon name="x.com" size="0.95rem" />
+		<!-- X (Twitter) logo -->
+		<svg viewBox="0 0 24 24" fill="currentColor" width="0.95em" height="0.95em" aria-hidden="true">
+			<path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+		</svg>
 	</a>
 	<a
 		href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(link)}`}
@@ -18,36 +21,41 @@ const link = Astro.props.link;
 		rel="noopener"
 		aria-label="Share on Facebook"
 	>
-		<Icon name="facebook" size="0.95rem" />
+		<!-- Facebook logo -->
+		<svg viewBox="0 0 24 24" fill="currentColor" width="0.95em" height="0.95em" aria-hidden="true">
+			<path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+		</svg>
 	</a>
 	<span class="copy-wrap">
 		<button
 			type="button"
-			id="copy-link"
+			class="copy-btn"
 			aria-label="リンクをコピー"
 			data-link={link.toString()}
 		>
-			<Icon name="link" size="0.95rem" />
+			<!-- Link / chain icon -->
+			<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="0.95em" height="0.95em" aria-hidden="true">
+				<path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+				<path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+			</svg>
 		</button>
-		<span id="copy-toast" class="copy-toast">コピーしました</span>
+		<span class="copy-toast">コピーしました</span>
 	</span>
 </div>
 
-<script is:inline>
-	(function () {
-		const btn = document.getElementById("copy-link");
-		if (!btn) return;
+<script>
+	document.querySelectorAll<HTMLButtonElement>(".copy-btn").forEach((btn) => {
 		btn.addEventListener("click", () => {
 			const link = btn.dataset.link;
 			if (!link) return;
 			navigator.clipboard.writeText(link).then(() => {
-				const t = document.getElementById("copy-toast");
-				if (!t) return;
-				t.classList.add("show");
-				setTimeout(() => t.classList.remove("show"), 1500);
+				const toast = btn.parentElement?.querySelector(".copy-toast");
+				if (!toast) return;
+				toast.classList.add("show");
+				setTimeout(() => toast.classList.remove("show"), 1500);
 			});
 		});
-	})();
+	});
 </script>
 
 <style>
@@ -57,7 +65,7 @@ const link = Astro.props.link;
 		margin: 40px 0 24px;
 	}
 	.share > a,
-	.share > .copy-wrap > button {
+	.copy-btn {
 		width: 34px;
 		height: 34px;
 		display: inline-flex;
@@ -71,16 +79,16 @@ const link = Astro.props.link;
 		text-decoration: none;
 		cursor: pointer;
 		padding: 0;
-		transition: color .15s, border-color .15s;
+		transition: color 0.15s, border-color 0.15s;
 	}
 	.share > a:hover,
-	.share > .copy-wrap > button:hover {
+	.copy-btn:hover {
 		color: var(--accent-text);
 		border-color: var(--accent);
 	}
 	.copy-wrap {
 		position: relative;
-		display: inline-block;
+		display: inline-flex;
 	}
 	.copy-toast {
 		position: absolute;
@@ -95,7 +103,7 @@ const link = Astro.props.link;
 		border-radius: 4px;
 		pointer-events: none;
 		opacity: 0;
-		transition: opacity .2s;
+		transition: opacity 0.2s;
 	}
 	.copy-toast::after {
 		content: "";

@@ -22,57 +22,92 @@ const sortedTags = [...tagCounts.entries()].sort((a, b) => b[1] - a[1]);
 <html lang="ja">
 	<head>
 		<BaseHead title={`タグ一覧 | ${SITE_TITLE}`} description="タグ一覧" />
-		<style>
-			.tag-list {
-				display: flex;
-				flex-wrap: wrap;
-				gap: 0.75rem;
-				list-style: none;
-				padding: 0;
-				margin: 1.5rem 0 0;
-			}
-			.tag-item a {
-				display: inline-flex;
-				align-items: center;
-				gap: 0.35em;
-				padding: 0.3em 0.9em;
-				background: rgb(var(--gray-light));
-				border-radius: 9999px;
-				text-decoration: none;
-				color: rgb(var(--gray-dark));
-				font-size: 0.88em;
-				transition: background 0.2s, color 0.2s;
-			}
-			.tag-item a:hover {
-				background: var(--accent);
-				color: #fff;
-			}
-			.count {
-				font-size: 0.8em;
-				opacity: 0.65;
-			}
-		</style>
 	</head>
 	<body>
 		<Header />
 		<div class="layout-wrapper">
-		<main>
-			<h1>タグ一覧</h1>
-			<ul class="tag-list">
-				{
-					sortedTags.map(([tag, count]) => (
-						<li class="tag-item">
-							<a href={`/tags/${tag}/`}>
-								{tag}
-								<span class="count">({count})</span>
+			<main id="main-content">
+				<header class="pg-intro">
+					<h1 class="pg-title">Tags</h1>
+					<span class="pg-meta">{sortedTags.length} tags</span>
+				</header>
+
+				<div class="tag-grid">
+					{
+						sortedTags.map(([tag, count]) => (
+							<a href={`/tags/${tag}/`} class="tag-row">
+								<span class="tag-name">#{tag}</span>
+								<span class="tag-count">{count}</span>
 							</a>
-						</li>
-					))
-				}
-			</ul>
-		</main>
-		<Sidebar />
+						))
+					}
+				</div>
+			</main>
+			<Sidebar />
 		</div>
 		<Footer />
 	</body>
 </html>
+
+<style>
+	.pg-intro {
+		margin-bottom: 28px;
+		display: flex;
+		align-items: baseline;
+		justify-content: space-between;
+		gap: 16px;
+		border-bottom: 1px solid var(--hairline);
+		padding-bottom: 16px;
+	}
+	.pg-title {
+		font-size: 22px;
+		font-weight: 700;
+		letter-spacing: 0.01em;
+		margin: 0;
+	}
+	.pg-meta {
+		font-size: 12.5px;
+		color: var(--muted);
+		font-variant-numeric: tabular-nums;
+	}
+
+	.tag-grid {
+		display: flex;
+		flex-wrap: wrap;
+	}
+
+	.tag-row {
+		display: inline-flex;
+		align-items: baseline;
+		gap: 8px;
+		padding: 12px 16px 12px 0;
+		text-decoration: none;
+		color: var(--ink-2);
+		font-size: 14px;
+		transition: color 0.15s;
+		border-bottom: 1px solid var(--hairline);
+		width: 50%;
+	}
+	.tag-row:hover {
+		color: var(--accent-text);
+	}
+
+	.tag-name {
+		font-weight: 600;
+	}
+
+	.tag-count {
+		font-size: 12px;
+		color: var(--muted);
+		font-variant-numeric: tabular-nums;
+	}
+
+	@media (max-width: 720px) {
+		.pg-title {
+			font-size: 19px;
+		}
+		.tag-row {
+			width: 100%;
+		}
+	}
+</style>

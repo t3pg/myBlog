@@ -112,23 +112,61 @@ const { title, description, pubDate, updatedDate, tags, prev, next } =
 						</nav>
 
 						<div class="giscus-wrapper">
-							<script
-								is:inline
-								src="https://giscus.app/client.js"
-								data-repo="t3pg/myBlog"
-								data-repo-id="R_kgDORN6zFw"
-								data-category="Announcements"
-								data-category-id="DIC_kwDORN6zF84C7SvK"
-								data-mapping="pathname"
-								data-strict="0"
-								data-reactions-enabled="1"
-								data-emit-metadata="0"
-								data-input-position="bottom"
-								data-theme="light"
-								data-lang="ja"
-								data-loading="lazy"
-								crossorigin="anonymous"
-								async></script>
+							<script is:inline>
+								(function () {
+									function getGiscusTheme() {
+										var theme = document.documentElement.getAttribute("data-theme");
+										if (theme === "dark") return "dark";
+										if (theme === "light") return "github-light";
+										return window.matchMedia("(prefers-color-scheme: dark)").matches
+											? "dark"
+											: "github-light";
+									}
+
+									function sendGiscusTheme(t) {
+										var iframe = document.querySelector("iframe.giscus-frame");
+										if (!iframe) return;
+										iframe.contentWindow.postMessage(
+											{ giscus: { setConfig: { theme: t } } },
+											"https://giscus.app"
+										);
+									}
+
+									var script = document.createElement("script");
+									script.src = "https://giscus.app/client.js";
+									script.setAttribute("data-repo", "t3pg/myBlog");
+									script.setAttribute("data-repo-id", "R_kgDORN6zFw");
+									script.setAttribute("data-category", "Announcements");
+									script.setAttribute("data-category-id", "DIC_kwDORN6zF84C7SvK");
+									script.setAttribute("data-mapping", "pathname");
+									script.setAttribute("data-strict", "0");
+									script.setAttribute("data-reactions-enabled", "1");
+									script.setAttribute("data-emit-metadata", "0");
+									script.setAttribute("data-input-position", "bottom");
+									script.setAttribute("data-theme", getGiscusTheme());
+									script.setAttribute("data-lang", "ja");
+									script.setAttribute("data-loading", "lazy");
+									script.setAttribute("crossorigin", "anonymous");
+									script.async = true;
+									document.currentScript.parentNode.appendChild(script);
+
+									// ダークモードトグル時に Giscus テーマを同期
+									var observer = new MutationObserver(function () {
+										sendGiscusTheme(getGiscusTheme());
+									});
+									observer.observe(document.documentElement, {
+										attributes: true,
+										attributeFilter: ["data-theme"],
+									});
+
+									// prefers-color-scheme 変化にも対応（data-theme 未設定時）
+									window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", function () {
+										if (!document.documentElement.hasAttribute("data-theme")) {
+											sendGiscusTheme(getGiscusTheme());
+										}
+									});
+								})();
+							</script>
 						</div>
 					</div>
 				</article>

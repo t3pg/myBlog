@@ -1,5 +1,4 @@
 ---
-import { Image } from "astro:assets";
 import type { CollectionEntry } from "astro:content";
 import BaseHead from "../components/BaseHead.astro";
 import Footer from "../components/Footer.astro";
@@ -20,99 +19,6 @@ const { title, description, pubDate, updatedDate, tags, prev, next } =
 <html lang="ja">
 	<head>
 		<BaseHead title={title} description={description} />
-
-		<style>
-			.hero-image {
-				width: 100%;
-			}
-			.hero-image img {
-				display: block;
-				margin: 0 auto;
-				border-radius: 12px;
-				box-shadow: var(--box-shadow);
-			}
-			.prose {
-				width: 720px;
-				max-width: calc(100% - 2em);
-				margin: auto;
-				padding: 1em;
-				color: rgb(var(--gray-dark));
-			}
-			.title {
-				margin-bottom: 1em;
-				padding: 1em 0;
-				text-align: center;
-				line-height: 1;
-			}
-			.title h1 {
-				margin: 0 0 0.5em 0;
-			}
-			.date {
-				margin-bottom: 0.5em;
-				color: rgb(var(--gray));
-			}
-			.last-updated-on {
-				font-style: italic;
-			}
-			.tags {
-				display: flex;
-				flex-wrap: wrap;
-				justify-content: center;
-				gap: 0.5em;
-				margin-top: 0.75em;
-			}
-			.tags a {
-				display: inline-block;
-				padding: 0.2em 0.75em;
-				background: rgb(var(--gray-light));
-				border-radius: 9999px;
-				text-decoration: none;
-				color: rgb(var(--gray-dark));
-				font-size: 0.8em;
-				transition:
-					background 0.2s,
-					color 0.2s;
-			}
-			.tags a:hover {
-				background: var(--accent);
-				color: #fff;
-			}
-			.post-nav {
-				display: flex;
-				justify-content: space-between;
-				gap: 1em;
-				margin-top: 2em;
-				padding-top: 1.5em;
-				border-top: 1px solid rgb(var(--gray-light));
-			}
-			.post-nav a {
-				display: flex;
-				flex-direction: column;
-				gap: 0.25em;
-				text-decoration: none;
-				color: inherit;
-				max-width: 48%;
-			}
-			.post-nav__next {
-				margin-left: auto;
-				text-align: right;
-			}
-			.post-nav__label {
-				font-size: 0.8em;
-				color: rgb(var(--gray));
-			}
-			.post-nav__title {
-				font-size: 0.9em;
-				color: var(--accent);
-				overflow: hidden;
-				display: -webkit-box;
-				-webkit-line-clamp: 2;
-				-webkit-box-orient: vertical;
-			}
-			.post-nav a:hover .post-nav__title {
-				text-decoration: underline;
-			}
-		</style>
 	</head>
 
 	<body>
@@ -120,78 +26,45 @@ const { title, description, pubDate, updatedDate, tags, prev, next } =
 		<div class="layout-wrapper">
 			<main>
 				<article>
-					<!-- <div class="hero-image">
-					{
-						heroImage && (
-							<Image
-								width={1020}
-								height={510}
-								src={heroImage}
-								alt=""
-							/>
-						)
-					}
-				</div> -->
 					<div class="prose">
-						<div class="title">
-							<div class="date">
+						<header class="article-head">
+							<div class="article-meta">
 								<FormattedDate date={pubDate} />
 								{
 									updatedDate && (
-										<div class="last-updated-on">
-											Last updated on{" "}
-											<FormattedDate date={updatedDate} />
-										</div>
+										<>
+											<span class="dot">·</span>
+											<span class="updated">
+												Updated{" "}
+												<FormattedDate
+													date={updatedDate}
+												/>
+											</span>
+										</>
 									)
 								}
 							</div>
-							<h1>{title}</h1>
+							<h1 class="article-title">{title}</h1>
 							{
 								tags && tags.length > 0 && (
-									<div class="tags">
+									<div class="article-tags">
 										{tags.map((tag) => (
-											<a href={`/tags/${tag}/`}>{tag}</a>
+											<a
+												href={`/tags/${tag}/`}
+												class="article-tag"
+											>
+												{tag}
+											</a>
 										))}
 									</div>
 								)
 							}
-							<hr />
-						</div>
+						</header>
+
 						<slot />
-						<nav class="post-nav">
-							{
-								prev && (
-									<a
-										href={`/blog/${prev.id.split("/").pop()}/`}
-										class="post-nav__prev"
-									>
-										<span class="post-nav__label">
-											← 前の記事
-										</span>
-										<span class="post-nav__title">
-											{prev.data.title}
-										</span>
-									</a>
-								)
-							}
-							{
-								next && (
-									<a
-										href={`/blog/${next.id.split("/").pop()}/`}
-										class="post-nav__next"
-									>
-										<span class="post-nav__label">
-											次の記事 →
-										</span>
-										<span class="post-nav__title">
-											{next.data.title}
-										</span>
-									</a>
-								)
-							}
-						</nav>
+
 						<script is:inline>
-							/* リンクカード: OGP 画像の読み込み失敗時にサムネイル欄を非表示 */
+							/* リンクカード: OGP画像読み込み失敗時にサムネイル欄を非表示 */
 							document
 								.querySelectorAll(
 									".remark-link-card-plus__image",
@@ -206,7 +79,38 @@ const { title, description, pubDate, updatedDate, tags, prev, next } =
 									});
 								});
 						</script>
+
 						<Share link={Astro.url} />
+
+						<nav class="post-nav">
+							{
+								prev && (
+									<a
+										href={`/blog/${prev.id.split("/").pop()}/`}
+										class="post-nav-link no-style"
+									>
+										<span class="lbl">← Previous</span>
+										<span class="ttl">
+											{prev.data.title}
+										</span>
+									</a>
+								)
+							}
+							{
+								next && (
+									<a
+										href={`/blog/${next.id.split("/").pop()}/`}
+										class="post-nav-link post-nav-next no-style"
+									>
+										<span class="lbl">Next →</span>
+										<span class="ttl">
+											{next.data.title}
+										</span>
+									</a>
+								)
+							}
+						</nav>
+
 						<div class="giscus-wrapper">
 							<script
 								is:inline
@@ -234,3 +138,121 @@ const { title, description, pubDate, updatedDate, tags, prev, next } =
 		<Footer />
 	</body>
 </html>
+
+<style>
+	.article-head {
+		margin: 0 0 36px;
+		padding-bottom: 24px;
+		border-bottom: 1px solid var(--hairline);
+	}
+	.article-meta {
+		display: flex;
+		gap: 14px;
+		align-items: center;
+		font-size: 12.5px;
+		color: var(--muted);
+		margin-bottom: 14px;
+		font-variant-numeric: tabular-nums;
+	}
+	.article-meta .dot {
+		opacity: 0.5;
+	}
+	.article-meta .updated {
+		font-style: italic;
+	}
+	.article-title {
+		font-size: 28px;
+		font-weight: 700;
+		letter-spacing: 0.005em;
+		line-height: 1.45;
+		margin: 0 0 16px;
+		color: var(--accent-text);
+	}
+	.article-tags {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 14px;
+	}
+	.article-tag {
+		font-size: 11.5px;
+		color: var(--muted);
+		text-decoration: none;
+		letter-spacing: 0.02em;
+		transition: color .15s;
+	}
+	.article-tag::before {
+		content: "#";
+		margin-right: 1px;
+		opacity: 0.55;
+	}
+	.article-tag:hover {
+		color: var(--accent-text);
+	}
+
+	.post-nav {
+		margin-top: 48px;
+		padding-top: 24px;
+		border-top: 1px solid var(--hairline);
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 16px;
+	}
+	.post-nav-link {
+		display: block;
+		padding: 14px 18px;
+		border: 1px solid var(--hairline);
+		border-radius: 8px;
+		text-decoration: none;
+		color: inherit;
+		transition: border-color .15s, background .15s;
+	}
+	.post-nav-link:hover {
+		border-color: var(--accent);
+		background: var(--accent-soft);
+	}
+	.post-nav-link .lbl {
+		display: block;
+		font-size: 11px;
+		color: var(--muted);
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+		margin-bottom: 6px;
+	}
+	.post-nav-link .ttl {
+		font-size: 14px;
+		color: var(--ink);
+		line-height: 1.5;
+		font-weight: 600;
+		display: -webkit-box;
+		-webkit-line-clamp: 2;
+		-webkit-box-orient: vertical;
+		overflow: hidden;
+		transition: color .15s;
+	}
+	.post-nav-link:hover .ttl {
+		color: var(--accent-text);
+	}
+	.post-nav-next {
+		text-align: right;
+		margin-left: auto;
+	}
+
+	.giscus-wrapper {
+		margin-top: 40px;
+		padding-top: 24px;
+		border-top: 1px solid var(--hairline);
+	}
+
+	@media (max-width: 720px) {
+		.article-title {
+			font-size: 22px;
+		}
+		.post-nav {
+			grid-template-columns: 1fr;
+			gap: 12px;
+		}
+		.post-nav-next {
+			text-align: left;
+		}
+	}
+</style>

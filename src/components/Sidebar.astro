@@ -1,6 +1,5 @@
 ---
 import { getCollection } from "astro:content";
-import FormattedDate from "./FormattedDate.astro";
 import { SIDEBAR_TAGS } from "../consts";
 
 const allPosts = await getCollection("blog");
@@ -28,15 +27,19 @@ const sortedMonths = [...monthMap.entries()].sort((a, b) =>
 <aside class="sidebar">
 	<!-- プロフィール -->
 	<section class="sidebar-section">
-		<h2 class="sidebar-heading">プロフィール</h2>
-		<div class="profile-placeholder">
-			<!-- 後で追加 -->
+		<h2 class="sidebar-heading">Profile</h2>
+		<div class="profile">
+			<div class="profile-avatar" aria-hidden="true">t</div>
+			<div>
+				<div class="profile-handle">t3pg</div>
+				<div class="profile-bio">日々のメモ。</div>
+			</div>
 		</div>
 	</section>
 
 	<!-- 最近の記事 -->
 	<section class="sidebar-section">
-		<h2 class="sidebar-heading">最近の記事</h2>
+		<h2 class="sidebar-heading">Recent</h2>
 		<ul class="sidebar-list">
 			{
 				recentPosts.map((post) => (
@@ -52,7 +55,7 @@ const sortedMonths = [...monthMap.entries()].sort((a, b) =>
 
 	<!-- タグ -->
 	<section class="sidebar-section">
-		<h2 class="sidebar-heading">タグ</h2>
+		<h2 class="sidebar-heading">Tags</h2>
 		<div class="tag-cloud">
 			{
 				SIDEBAR_TAGS.map((tag) => (
@@ -62,21 +65,26 @@ const sortedMonths = [...monthMap.entries()].sort((a, b) =>
 				))
 			}
 		</div>
-		<a href="/tags/" class="all-tags-link">タグ一覧をすべて見る →</a>
+		<a href="/tags/" class="all-tags-link">すべてのタグ →</a>
 	</section>
 
 	<!-- 月別アーカイブ -->
 	<section class="sidebar-section">
-		<h2 class="sidebar-heading">月別アーカイブ</h2>
+		<h2 class="sidebar-heading">Archive</h2>
 		<ul class="sidebar-list">
 			{
 				sortedMonths.map(([key, count]) => {
 					const [year, month] = key.split("/");
 					return (
 						<li>
-							<a href={`/blog/${year}/${month}/`}>
-								{year}年{parseInt(month)}月
-								<span class="archive-count">({count}件)</span>
+							<a
+								href={`/blog/${year}/${month}/`}
+								class="archive-link"
+							>
+								<span>
+									{year}.{month}
+								</span>
+								<span class="archive-count">{count}</span>
 							</a>
 						</li>
 					);
@@ -90,32 +98,56 @@ const sortedMonths = [...monthMap.entries()].sort((a, b) =>
 	.sidebar {
 		display: flex;
 		flex-direction: column;
-		gap: 2rem;
+		gap: 36px;
 		min-width: 0;
+		font-size: 13px;
 	}
 
 	.sidebar-section {
-		background: #fff;
-		border: 1px solid rgb(var(--gray-light));
-		border-radius: 10px;
-		padding: 1.1em 1.2em;
+		padding: 0;
+		border: 0;
+		background: transparent;
 	}
 
 	.sidebar-heading {
-		font-size: 0.85em;
+		font-size: 11px;
 		font-weight: 700;
-		letter-spacing: 0.05em;
+		letter-spacing: 0.16em;
 		text-transform: uppercase;
-		color: rgb(var(--gray));
-		margin: 0 0 0.8em 0;
-		padding-bottom: 0.5em;
-		border-bottom: 1px solid rgb(var(--gray-light));
+		color: var(--muted);
+		margin: 0 0 14px;
+		padding-bottom: 8px;
+		border-bottom: 1px solid var(--hairline);
 	}
 
-	.profile-placeholder {
-		height: 80px;
-		background: rgb(var(--gray-light));
-		border-radius: 8px;
+	.profile {
+		display: flex;
+		gap: 12px;
+		align-items: center;
+	}
+	.profile-avatar {
+		width: 44px;
+		height: 44px;
+		border-radius: 50%;
+		background: var(--hairline);
+		color: var(--muted);
+		flex-shrink: 0;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		font-size: 14px;
+		font-weight: 700;
+	}
+	.profile-handle {
+		font-weight: 600;
+		font-size: 13.5px;
+		color: var(--ink);
+	}
+	.profile-bio {
+		font-size: 12px;
+		color: var(--muted);
+		line-height: 1.55;
+		margin-top: 2px;
 	}
 
 	.sidebar-list {
@@ -124,69 +156,74 @@ const sortedMonths = [...monthMap.entries()].sort((a, b) =>
 		margin: 0;
 		display: flex;
 		flex-direction: column;
-		gap: 0.4em;
+		gap: 10px;
 	}
 
 	.sidebar-list li a {
-		display: flex;
-		justify-content: space-between;
-		align-items: baseline;
-		gap: 0.5em;
+		display: block;
+		color: var(--ink-2);
+		font-size: 13px;
+		line-height: 1.5;
+		padding: 0;
 		text-decoration: none;
-		color: rgb(var(--gray-dark));
-		font-size: 0.88em;
-		line-height: 1.4;
-		padding: 0.2em 0;
-		transition: color 0.15s;
+		transition: color .15s;
 	}
 
 	.sidebar-list li a:hover {
-		color: var(--accent);
+		color: var(--accent-text);
 	}
 
+	.archive-link {
+		display: flex !important;
+		justify-content: space-between;
+		align-items: baseline;
+		font-variant-numeric: tabular-nums;
+	}
 	.archive-count {
-		color: rgb(var(--gray));
-		font-size: 0.85em;
-		white-space: nowrap;
-		flex-shrink: 0;
+		color: var(--muted);
+		font-size: 12px;
 	}
 
 	.tag-cloud {
 		display: flex;
 		flex-wrap: wrap;
-		gap: 0.4em;
+		gap: 6px 12px;
 	}
 
 	.tag-pill {
-		display: inline-flex;
-		align-items: center;
-		gap: 0.25em;
-		padding: 0.2em 0.65em;
-		background: rgb(var(--gray-light));
-		border-radius: 9999px;
+		font-size: 12.5px;
+		color: var(--ink-2);
 		text-decoration: none;
-		color: rgb(var(--gray-dark));
-		font-size: 0.78em;
-		transition:
-			background 0.2s,
-			color 0.2s;
+		padding: 0;
+		background: transparent;
+		transition: color .15s;
 	}
-
+	.tag-pill::before {
+		content: "#";
+		opacity: 0.55;
+		margin-right: 1px;
+	}
 	.tag-pill:hover {
-		background: var(--accent);
-		color: #fff;
+		color: var(--accent-text);
+		background: transparent;
 	}
 
 	.all-tags-link {
-		display: block;
-		margin-top: 0.75em;
-		font-size: 0.82em;
-		color: rgb(var(--gray));
+		display: inline-block;
+		margin-top: 14px;
+		font-size: 12px;
+		color: var(--muted);
 		text-decoration: none;
-		transition: color 0.15s;
+		transition: color .15s;
 	}
 
 	.all-tags-link:hover {
-		color: var(--accent);
+		color: var(--accent-text);
+	}
+
+	@media (max-width: 880px) {
+		.sidebar {
+			gap: 28px;
+		}
 	}
 </style>

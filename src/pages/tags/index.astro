@@ -26,7 +26,7 @@ const sortedTags = [...tagCounts.entries()].sort((a, b) => b[1] - a[1]);
 	<body>
 		<Header />
 		<div class="layout-wrapper">
-			<main>
+			<main id="main-content">
 				<header class="pg-intro">
 					<h1 class="pg-title">Tags</h1>
 					<span class="pg-meta">{sortedTags.length} tags</span>

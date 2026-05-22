@@ -15,7 +15,7 @@
 	--surface: #ffffff;
 	--ink: #18181b;
 	--ink-2: #2c2c30;
-	--muted: #7a7a82;
+	--muted: #6b6b72;
 	--hairline: #e5e4df;
 	--hairline-strong: #d4d3cd;
 	--accent: #2337ff;
@@ -47,7 +47,7 @@
 		--surface: #232735;
 		--ink: #dcdfeb;
 		--ink-2: #b6b9c8;
-		--muted: #7d8295;
+		--muted: #9298ab;
 		--hairline: #2a2e3d;
 		--hairline-strong: #3a3f52;
 		--accent: #8b97ff;
@@ -66,7 +66,7 @@
 	--surface: #232735;
 	--ink: #dcdfeb;
 	--ink-2: #b6b9c8;
-	--muted: #7d8295;
+	--muted: #9298ab;
 	--hairline: #2a2e3d;
 	--hairline-strong: #3a3f52;
 	--accent: #8b97ff;
@@ -289,7 +289,6 @@ img { max-width: 100%; height: auto; }
 	height: 1px;
 	width: 1px;
 	overflow: hidden;
-	clip: rect(1px 1px 1px 1px);
 	clip: rect(1px, 1px, 1px, 1px);
 	clip-path: inset(50%);
 	white-space: nowrap;
@@ -429,5 +428,26 @@ img { max-width: 100%; height: auto; }
 	}
 	.remark-link-card-plus__main {
 		padding: 12px 14px;
+	}
+}
+
+/* ============================================================
+   Cross-document View Transitions (MPA page navigation)
+   ============================================================ */
+@media (prefers-reduced-motion: no-preference) {
+	@view-transition {
+		navigation: auto;
+	}
+}
+
+/* ============================================================
+   Reduced motion: すべてのアニメーション・トランジションを無効化
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+	*, *::before, *::after {
+		animation-duration: 0.01ms !important;
+		animation-iteration-count: 1 !important;
+		transition-duration: 0.01ms !important;
+		scroll-behavior: auto !important;
 	}
 }

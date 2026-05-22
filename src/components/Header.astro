@@ -216,5 +216,9 @@ import HeaderLink from "./HeaderLink.astro";
 			padding: 6px 8px;
 			font-size: 12.5px;
 		}
+		/* ブランドロゴがホームへのリンクを兼ねるため、モバイルでは "Home" を非表示 */
+		.hdr-nav :global(a[href="/"]):not(.hdr-icon) {
+			display: none;
+		}
 	}
 </style>

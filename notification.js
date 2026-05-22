@@ -4,8 +4,8 @@
 const webhookUrl = process.env.DISCORD_WEBHOOK;
 
 if (!webhookUrl) {
-    console.error('Error: DISCORD_WEBHOOK environment variable is not set');
-    process.exit(1);
+    console.log('DISCORD_WEBHOOK is not set — skipping notification.');
+    process.exit(0);
 }
 
 

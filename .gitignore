@@ -33,3 +33,7 @@ src/content/blog/template.md
 test/
 
 remark-link-card-plus/
+
+# agent skills
+.agents/
+skills-lock.json

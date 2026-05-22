@@ -1,4 +1,0 @@
----
-name: "Minecraft"
-description: ""
----

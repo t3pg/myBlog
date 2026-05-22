@@ -1,4 +1,0 @@
----
-name: "Discord.js"
-description: ""
----

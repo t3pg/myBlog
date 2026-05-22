@@ -1,4 +1,0 @@
----
-name: "GitHub"
-description: ""
----

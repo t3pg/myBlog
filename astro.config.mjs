@@ -6,6 +6,8 @@ import { defineConfig } from 'astro/config';
 import astroExpressiveCode from 'astro-expressive-code';
 import remarkLinkCard from 'remark-link-card-plus';
 import mermaid from 'astro-mermaid';
+import remarkDirective from 'remark-directive';
+import { remarkCustomDirective } from './src/plugins/directive.mjs';
 
 import starlight from '@astrojs/starlight';
 
@@ -50,6 +52,8 @@ export default defineConfig({
 					cache: true,
 				},
 			],
+			remarkDirective,
+			remarkCustomDirective,
 		],
 	},
 });

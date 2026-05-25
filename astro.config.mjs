@@ -13,7 +13,7 @@ import starlight from '@astrojs/starlight';
 
 // https://astro.build/config
 export default defineConfig({
-	site: 'https://t-log.pages.dev',
+	site: 'https://t-3.dev',
 	integrations: [
 		mermaid(),
 		astroExpressiveCode(),
@@ -24,15 +24,15 @@ export default defineConfig({
 			lastmod: new Date(),
 			serialize(item) {
 				// ホームページ
-				if (item.url === 'https://t-log.pages.dev/') {
+				if (item.url === 'https://t-3.dev/') {
 					return { ...item, changefreq: 'weekly', priority: 1.0 };
 				}
 				// ブログ一覧
-				if (item.url === 'https://t-log.pages.dev/blog/') {
+				if (item.url === 'https://t-3.dev/blog/') {
 					return { ...item, changefreq: 'weekly', priority: 0.8 };
 				}
 				// 個別ブログ記事
-				if (item.url.startsWith('https://t-log.pages.dev/blog/')) {
+				if (item.url.startsWith('https://t-3.dev/blog/')) {
 					return { ...item, changefreq: 'monthly', priority: 0.7 };
 				}
 				// その他のページ（About など）

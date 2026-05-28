@@ -4,21 +4,13 @@ import { join, basename, extname } from 'path';
 
 export function remarkEmoji() {
   const emojiMap = {};
-  const base = join(process.cwd(), 'public/emoji');
+  const emojiDir = join(process.cwd(), 'public/emoji');
 
-  if (existsSync(base)) {
-    for (const file of readdirSync(base)) {
-      if (file.startsWith('.') || file === 'wide') continue;
+  if (existsSync(emojiDir)) {
+    for (const file of readdirSync(emojiDir)) {
+      if (file.startsWith('.')) continue;
       const name = basename(file, extname(file));
       emojiMap[name] = `/emoji/${file}`;
-    }
-    const wideDir = join(base, 'wide');
-    if (existsSync(wideDir)) {
-      for (const file of readdirSync(wideDir)) {
-        if (file.startsWith('.')) continue;
-        const name = basename(file, extname(file));
-        emojiMap[name] = `/emoji/wide/${file}`;
-      }
     }
   }
 

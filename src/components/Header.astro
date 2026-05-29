@@ -129,7 +129,9 @@ import HeaderLink from "./HeaderLink.astro";
 		color: var(--muted);
 		padding: 6px 10px;
 		border-radius: 6px;
-		transition: color .15s, background .15s;
+		transition:
+			color 0.15s,
+			background 0.15s;
 		text-decoration: none;
 	}
 	.hdr-nav :global(a):not(.hdr-icon):hover {
@@ -155,7 +157,9 @@ import HeaderLink from "./HeaderLink.astro";
 		cursor: pointer;
 		border-radius: 6px;
 		margin-left: 4px;
-		transition: color .15s, background .15s;
+		transition:
+			color 0.15s,
+			background 0.15s;
 		text-decoration: none;
 	}
 	.hdr-icon:hover {
@@ -173,7 +177,9 @@ import HeaderLink from "./HeaderLink.astro";
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		transition: opacity .2s, transform .2s;
+		transition:
+			opacity 0.2s,
+			transform 0.2s;
 	}
 	:global([data-theme="light"]) .hdr-toggle .sun,
 	:global(:root:not([data-theme="dark"])) .hdr-toggle .sun {

@@ -4,11 +4,9 @@ export function remarkCustomDirective() {
   return (tree) => {
     // Markdownの構文ツリーから directive（独自記法）を探す
     visit(tree, (node) => {
-      // コンテナ型 (:::)、リーフ型 (::)、テキスト型 (:) のディレクティブを対象とする
+      // コンテナ型 (:::)のディレクティブを対象とする
       if (
-        node.type === 'containerDirective' ||
-        node.type === 'leafDirective' ||
-        node.type === 'textDirective'
+        node.type === 'containerDirective'
       ) {
         // ディレクティブの名前が 'quote' でない場合は無視
         if (node.name !== 'quote') return;

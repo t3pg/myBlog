@@ -105,6 +105,36 @@ const hasToc = tocItems.length > 0;
 								});
 						</script>
 
+						<script is:inline>
+							/* 絵文字: カラーモード切替に応じて src を差し替え */
+							(function () {
+								function isDark() {
+									var t = document.documentElement.getAttribute("data-theme");
+									return t === "dark" || (!t && window.matchMedia("(prefers-color-scheme: dark)").matches);
+								}
+								function applyEmojiTheme() {
+									var dark = isDark();
+									document.querySelectorAll("img.emoji-themed").forEach(function (img) {
+										var src = dark ? img.dataset.emojiDark : img.dataset.emojiLight;
+										if (src) {
+											img.style.visibility = "";
+											if (img.getAttribute("src") !== src) img.src = src;
+										} else {
+											img.style.visibility = "hidden";
+										}
+									});
+								}
+								applyEmojiTheme();
+								new MutationObserver(applyEmojiTheme).observe(
+									document.documentElement,
+									{ attributes: true, attributeFilter: ["data-theme"] }
+								);
+								window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", function () {
+									if (!document.documentElement.hasAttribute("data-theme")) applyEmojiTheme();
+								});
+							})();
+						</script>
+
 						<Share link={Astro.url} />
 
 						<nav class="post-nav">

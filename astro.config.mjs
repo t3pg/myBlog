@@ -8,6 +8,7 @@ import remarkLinkCard from 'remark-link-card-plus';
 import mermaid from 'astro-mermaid';
 import remarkDirective from 'remark-directive';
 import { remarkCustomDirective } from './src/plugins/directive.mjs';
+import { remarkEmoji } from './src/plugins/emoji.mjs';
 
 import starlight from '@astrojs/starlight';
 
@@ -54,6 +55,7 @@ export default defineConfig({
 			],
 			remarkDirective,
 			remarkCustomDirective,
+			remarkEmoji,
 		],
 	},
 });

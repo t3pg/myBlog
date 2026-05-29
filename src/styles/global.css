@@ -213,6 +213,14 @@ p { margin: 0 0 1em; }
 .prose blockquote > * + * { margin-top: 0.6em; }
 .prose blockquote p { margin: 0; }
 
+/* Custom Emoji */
+.emoji {
+	display: inline;
+	height: 1em;
+	vertical-align: middle;
+	margin: 0 0.05em;
+}
+
 /* Inline code (落ち着いたトーン) */
 .prose code:not(pre code):not(.expressive-code *) {
 	background: var(--code-bg);

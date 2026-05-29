@@ -24,9 +24,9 @@ type Props = {
 };
 
 const { post, prev, next } = Astro.props;
-const { Content } = await render(post);
+const { Content, headings } = await render(post);
 ---
 
-<BlogPost {...post.data} prev={prev} next={next}>
+<BlogPost {...post.data} headings={headings} prev={prev} next={next}>
 	<Content components={{ Video }} />
 </BlogPost>

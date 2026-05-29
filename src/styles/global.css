@@ -87,6 +87,11 @@ html, body {
 	padding: 0;
 }
 
+/* sticky ヘッダー分のスクロール余白 */
+html {
+	scroll-padding-top: 72px;
+}
+
 body {
 	font-family: "Noto Sans JP", system-ui, -apple-system, sans-serif;
 	background: var(--bg);

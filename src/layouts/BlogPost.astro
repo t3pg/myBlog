@@ -1,6 +1,8 @@
 ---
 import type { CollectionEntry } from "astro:content";
+import type { MarkdownHeading } from "astro";
 import BaseHead from "../components/BaseHead.astro";
+import TableOfContents from "../components/TableOfContents.astro";
 import Footer from "../components/Footer.astro";
 import FormattedDate from "../components/FormattedDate.astro";
 import Header from "../components/Header.astro";
@@ -10,10 +12,14 @@ import Share from "../components/Share.astro";
 type Props = CollectionEntry<"blog">["data"] & {
 	prev?: CollectionEntry<"blog">;
 	next?: CollectionEntry<"blog">;
+	headings?: MarkdownHeading[];
 };
 
-const { title, description, pubDate, updatedDate, tags, prev, next } =
+const { title, description, pubDate, updatedDate, tags, prev, next, headings } =
 	Astro.props;
+
+const tocItems = (headings ?? []).filter((h) => h.depth >= 1 && h.depth <= 3);
+const hasToc = tocItems.length > 0;
 ---
 
 <html lang="ja">
@@ -23,7 +29,15 @@ const { title, description, pubDate, updatedDate, tags, prev, next } =
 
 	<body>
 		<Header />
-		<div class="layout-wrapper">
+		<div class={`layout-wrapper${hasToc ? " has-toc" : ""}`}>
+			{
+				hasToc && (
+					<aside class="toc-sidebar" aria-label="目次">
+						<p class="toc-sidebar-heading">目次</p>
+						<TableOfContents headings={headings} />
+					</aside>
+				)
+			}
 			<main id="main-content">
 				<article>
 					<div class="prose">
@@ -60,6 +74,17 @@ const { title, description, pubDate, updatedDate, tags, prev, next } =
 								)
 							}
 						</header>
+
+						{
+							hasToc && (
+								<details class="toc-mobile">
+									<summary class="toc-mobile-summary">目次</summary>
+									<div class="toc-mobile-body">
+										<TableOfContents headings={headings} />
+									</div>
+								</details>
+							)
+						}
 
 						<slot />
 
@@ -178,6 +203,104 @@ const { title, description, pubDate, updatedDate, tags, prev, next } =
 </html>
 
 <style>
+	/* ===== 左サイドバー TOC ===== */
+
+	/*
+	 * layout-wrapper のグリッド・max-width は変えない。
+	 * TOC を <main> と同じ grid-column: 1 / row: 1 に重ねて配置し、
+	 * margin-left のマイナス値でビューポート左余白に引き込む。
+	 * これにより記事・右サイドバーの位置は目次なし記事と完全に一致する。
+	 */
+	#main-content {
+		grid-column: 1;
+		grid-row: 1;
+	}
+
+	.toc-sidebar {
+		/* 目次なし記事と同じ grid 列・行に重ねて配置 */
+		grid-column: 1;
+		grid-row: 1;
+		justify-self: start;
+		align-self: start;
+		width: 180px;
+		/* 180px(幅) + 16px(余白) だけ左へ引き込む */
+		margin-left: -196px;
+		position: sticky;
+		top: 240px;
+		max-height: calc(100vh - 260px);
+		overflow-y: auto;
+		font-size: 13px;
+		z-index: 1;
+		/* デフォルト非表示。ビューポートが十分広い場合のみ表示 */
+		display: none;
+	}
+
+	/* layout-wrapper の左余白に TOC が収まる幅: (vw - 1080px) / 2 ≥ 196px → vw ≥ 1472px */
+	@media (min-width: 1472px) {
+		.toc-sidebar {
+			display: block;
+		}
+	}
+
+	.toc-sidebar-heading {
+		font-size: 11px;
+		font-weight: 700;
+		letter-spacing: 0.16em;
+		text-transform: uppercase;
+		color: var(--muted);
+		margin: 0 0 14px;
+		padding: 0 0 8px;
+		border-bottom: 1px solid var(--hairline);
+	}
+
+	/* ===== 折りたたみ TOC (1472px 未満) ===== */
+	.toc-mobile {
+		display: none;
+	}
+
+	@media (max-width: 1471px) {
+		.toc-mobile {
+			display: block;
+			margin: 0 0 2em;
+			padding: 12px 16px;
+			background: var(--surface);
+			border: 1px solid var(--hairline);
+			border-radius: 8px;
+		}
+		.toc-mobile-summary {
+			font-size: 11px;
+			font-weight: 700;
+			letter-spacing: 0.15em;
+			text-transform: uppercase;
+			color: var(--muted);
+			cursor: pointer;
+			user-select: none;
+			list-style: none;
+			display: flex;
+			align-items: center;
+			gap: 6px;
+			padding: 2px 0;
+		}
+		.toc-mobile-summary::-webkit-details-marker {
+			display: none;
+		}
+		.toc-mobile-summary::before {
+			content: "▸";
+			font-size: 10px;
+			transition: transform 0.15s;
+			display: inline-block;
+		}
+		.toc-mobile[open] .toc-mobile-summary::before {
+			transform: rotate(90deg);
+		}
+		.toc-mobile-body {
+			margin-top: 12px;
+			padding-top: 10px;
+			border-top: 1px solid var(--hairline);
+		}
+	}
+
+	/* ===== 記事ヘッダー ===== */
 	.article-head {
 		margin: 0 0 36px;
 		padding-bottom: 24px;

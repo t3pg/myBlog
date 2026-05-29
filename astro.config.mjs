@@ -23,6 +23,7 @@ export default defineConfig({
 			changefreq: 'weekly',
 			priority: 0.7,
 			lastmod: new Date(),
+			// @ts-ignore
 			serialize(item) {
 				// ホームページ
 				if (item.url === 'https://t-3.dev/') {

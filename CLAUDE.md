@@ -9,9 +9,21 @@
 
 - **フレームワーク**: Astro 5.x
 - **コンテンツ形式**: Markdown / MDX
-- **主要インテグレーション**: `@astrojs/mdx`, `@astrojs/sitemap`, `@astrojs/starlight`, `starlight-blog`
+- **インテグレーション**: `@astrojs/mdx`, `@astrojs/sitemap`, `@astrojs/starlight`, `astro-expressive-code`, `astro-mermaid`
+- **Markdown プラグイン**: `remark-link-card-plus`, `remark-directive`, カスタムディレクティブ, カスタム絵文字
 - **画像処理**: sharp
-- **デプロイ先**: Cloudflare Pages (`https://t-log.pages.dev`)
+- **デプロイ先**: Cloudflare Pages (`https://t-3.dev`)
+
+### Starlight の利用範囲
+
+`@astrojs/starlight` はインテグレーションとして登録されているが、**ルーティング・レイアウトには使用しない**。以下のコンポーネントをインポートするためだけに使用している。
+
+| コンポーネント | 使用箇所 |
+|---|---|
+| `Icon` | `Header.astro`, `Share.astro` |
+| `Aside`, `LinkCard`, `Code` | 一部の MDX 記事内 |
+
+`starlight-blog` パッケージはインストール済みだが未設定。
 
 ## ディレクトリ構成
 
@@ -34,17 +46,22 @@ src/
 │   ├── books/index.astro              # 本棚ページ
 │   └── rss.xml.js                     # RSS フィード
 ├── layouts/
-│   └── BlogPost.astro                 # 記事レイアウト（ヘッダー・フッター・サイドバー含む）
+│   └── BlogPost.astro                 # 記事レイアウト（ヘッダー・フッター・サイドバー・TOC 含む）
 ├── components/
-│   ├── BaseHead.astro                 # <head> メタタグ・OGP
-│   ├── Header.astro                   # ナビゲーションバー
+│   ├── BaseHead.astro                 # <head> メタタグ・OGP・アナリティクス
+│   ├── Header.astro                   # ナビゲーションバー（ダークモードトグル含む）
 │   ├── Footer.astro                   # フッター
-│   ├── Sidebar.astro                  # サイドバー（最新記事・タグ・月別アーカイブ）
+│   ├── Sidebar.astro                  # 右サイドバー（プロフィール・最新記事・タグ・月別アーカイブ）
+│   ├── TableOfContents.astro          # 記事目次（見出しリストのみ、ラップは BlogPost.astro が担当）
+│   ├── Share.astro                    # SNS シェアボタン
 │   ├── FormattedDate.astro            # 日付フォーマット
 │   ├── HeaderLink.astro               # ナビリンク
 │   └── Video.astro                    # 動画埋め込みコンポーネント
+├── plugins/
+│   ├── directive.mjs                  # カスタム remark ディレクティブ
+│   └── emoji.mjs                      # カスタム絵文字プラグイン
 ├── styles/
-│   └── global.css                     # グローバル CSS
+│   └── global.css                     # グローバル CSS（CSS 変数・prose スタイル・リンクカード等）
 ├── assets/                            # 画像アセット
 └── consts.ts                          # サイト定数（SITE_TITLE, SIDEBAR_TAGS など）
 ```
@@ -66,10 +83,33 @@ tags: ["タグ1", "タグ2"] # 省略可
 
 - グローバル CSS: `src/styles/global.css`
 - 各コンポーネントはスコープ付き `<style>` ブロックを持つ
-- モバイルブレークポイント: `720px`
-- レイアウト: 2カラム（メイン `1fr` + サイドバー `260px`）、モバイルは1カラム
-- フォント: Noto Sans JP
-- アクセントカラー: `#2337ff`
+- フォント: Noto Sans JP + JetBrains Mono（コードブロック）
+- アクセントカラー: `#2337ff`（ライト）/ `#8b97ff`（ダーク）
+- `scroll-padding-top: 72px`（sticky ヘッダー分のアンカーオフセット）
+
+### ブレークポイント
+
+| 幅 | 変化 |
+|---|---|
+| `< 720px` | 記事タイトルフォントサイズ縮小、前後ナビを1列化 |
+| `< 880px` | レイアウト1カラム化（右サイドバー非表示） |
+| `< 1472px` | TOC 左サイドバー非表示 → 折りたたみ TOC を記事内に表示 |
+| `≥ 1472px` | TOC 左サイドバー表示（ビューポート左余白に配置） |
+
+### レイアウト構造
+
+```
+[TOC 左サイドバー*]  [layout-wrapper: main(1fr) + sidebar(240px)]
+* ≥1472px のみ。grid-column: 1 / row: 1 で <main> と重ね、margin-left: -196px で左余白へ引き込む
+```
+
+## 目次（TableOfContents）
+
+- `src/components/TableOfContents.astro`: `headings`・`minDepth`・`maxDepth` props を受け取り、`<ul>` リストのみをレンダリング
+- `BlogPost.astro` が見出し（`render()` の `headings`）を渡す
+- H1〜H3 を対象（デフォルト）。H3 は 1em インデント
+- **デスクトップ（≥1472px）**: `<aside class="toc-sidebar">` として左余白に sticky 表示
+- **それ未満**: `<details class="toc-mobile">` として記事ヘッダー直下に折りたたみ表示
 
 ## 定数・設定
 
@@ -82,7 +122,7 @@ tags: ["タグ1", "タグ2"] # 省略可
 - リポジトリ: `t3pg/myBlog`
 - カテゴリ: `Announcements`
 - マッピング: `pathname`
-- テーマ: `light`（GitHub Light 固定）
+- テーマ: `data-theme` 属性に連動（ダークモード対応）
 - 言語: `ja`
 
 ## 開発コマンド

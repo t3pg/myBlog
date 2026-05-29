@@ -42,6 +42,7 @@ export default defineConfig({
 		}),
 		starlight({
 			title: 't-log',
+			tableOfContents: { minHeadingLevel: 1, maxHeadingLevel: 3 },
 			locales: {
         		root: {
           			label: '日本語',

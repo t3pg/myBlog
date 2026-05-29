@@ -42,6 +42,11 @@ export default defineConfig({
 		}),
 		starlight({
 			title: 't-log',
+			locales: {
+        		root: {
+          			label: '日本語',
+          			lang: 'ja',
+        		},},
 			disable404Route: true,
 		}),
 	],

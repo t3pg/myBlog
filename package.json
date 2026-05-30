@@ -12,14 +12,12 @@
     "@astrojs/mdx": "^5.0.4",
     "@astrojs/rss": "^4.0.15",
     "@astrojs/sitemap": "^3.7.0",
-    "@astrojs/starlight": "^0.39.2",
     "astro": "^6.3.1",
     "astro-mermaid": "^2.0.1",
     "mermaid": "^11.15.0",
     "remark-directive": "^4.0.0",
     "remark-link-card-plus": "^0.7.4",
     "sharp": "^0.34.3",
-    "starlight-blog": "^0.26.1",
     "unist-util-visit": "^5.1.0"
   }
 }

@@ -57,8 +57,8 @@
 
 ## E. パフォーマンス
 - [~] ~~画像最適化: md 内画像をビルド時に Astro `<Image>` へ自動変換~~（保留: 記事内の画像は全6件すべてリモートURL（r2.dev/media.t-3.dev/books.google.com）で、Astro のビルド時最適化はローカル画像専用のため現コンテンツには非適用。記事本文も変更禁止。要相談）
-- [ ] Google Fonts を Astro 6 `astro:fonts` で自己ホスト＋日本語サブセット化
-- [ ] Google Analytics を `@astrojs/partytown` で Web Worker にオフロード
+- [~] ~~Google Fonts を Astro 6 `astro:fonts` で自己ホスト＋日本語サブセット化~~（Skip）
+- [~] ~~Google Analytics を `@astrojs/partytown` で Web Worker にオフロード~~（Skip）
 - [x] **ブログ一覧・タグ別一覧のページネーション**（20件/ページ）。ページ1は既存URL（`/blog/`・`/tags/{tag}/`）維持、2ページ目以降は `/blog/page/N/`・`/tags/{tag}/page/N/`（連番記事URL `/blog/{連番}/` との衝突回避）。rel prev/next 付与。共通化のため `PostList.astro`・`Pagination.astro`・`PostListLayout.astro` を新設
 
 ## F. heroImage の扱い

@@ -35,7 +35,7 @@
 - [x] RSS に各 item の description を明示し、壊れていたリンク（`/blog/{id}/`→`/blog/{連番}/`）を修正・日付降順ソート（`rss.xml.js`）
 - [x] `og:locale=ja_JP` / `og:site_name` / `article:published_time` / `article:modified_time` / Twitter `@site`・`@creator` 追加
 - [ ] sitemap の `lastmod` に `updatedDate`/`pubDate` を反映（`@astrojs/sitemap` serialize）→ 今回更新
-- [ ] `404.astro` に `noindex` 付与 → 今回更新
+- [x] `404.astro` に `noindex` 付与
 - [~] ~~パンくず JSON-LD（BreadcrumbList）追加~~（Skip）
 - [~] ~~空 description のフォールバック自動生成~~（Skip）
 

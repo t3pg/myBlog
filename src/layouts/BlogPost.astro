@@ -24,7 +24,13 @@ const hasToc = tocItems.length > 0;
 
 <html lang="ja">
 	<head>
-		<BaseHead title={title} description={description} />
+		<BaseHead
+			title={title}
+			description={description}
+			type="article"
+			publishedTime={pubDate}
+			modifiedTime={updatedDate}
+		/>
 	</head>
 
 	<body>

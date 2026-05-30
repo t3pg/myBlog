@@ -34,7 +34,7 @@
 - [x] ページ別 title/description 最適化（`SITE_DESCRIPTION` を実態に即した内容へ更新、about/blog一覧にページ固有 description。about の重複 `<Footer />` も除去）
 - [x] RSS に各 item の description を明示し、壊れていたリンク（`/blog/{id}/`→`/blog/{連番}/`）を修正・日付降順ソート（`rss.xml.js`）
 - [x] `og:locale=ja_JP` / `og:site_name` / `article:published_time` / `article:modified_time` / Twitter `@site`・`@creator` 追加
-- [~] ~~sitemap の `lastmod` に `updatedDate`/`pubDate` を反映~~（Skip: `@astrojs/sitemap` v6.0.0 では serialize で設定した `item.lastmod` が出力されず実現できないため見送り。config は元の状態へ戻した）
+- [x] sitemap の `lastmod` に `updatedDate`/`pubDate` を反映（`@astrojs/sitemap` serialize で記事101件に frontmatter の日付を反映。全URL一律の `lastmod: new Date()` は廃止）
 - [x] `404.astro` に `noindex` 付与
 - [~] ~~パンくず JSON-LD（BreadcrumbList）追加~~（Skip）
 - [~] ~~空 description のフォールバック自動生成~~（Skip）

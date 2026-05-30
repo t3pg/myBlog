@@ -33,11 +33,11 @@
 - [~] ~~OGP画像の記事別対応: heroImage 活用~~（Skip）
 - [x] ページ別 title/description 最適化（`SITE_DESCRIPTION` を実態に即した内容へ更新、about/blog一覧にページ固有 description。about の重複 `<Footer />` も除去）
 - [x] RSS に各 item の description を明示し、壊れていたリンク（`/blog/{id}/`→`/blog/{連番}/`）を修正・日付降順ソート（`rss.xml.js`）
-- [x] `og:locale=ja_JP` / `og:site_name` / `article:published_time` / `article:modified_time` / Twitter `@site`・`@creator` 追加
+- [x] `og:locale=ja_JP` / `og:site_name` / `article:published_time` / `article:modified_time` 追加（Twitter `@site`/`@creator` はハンドル不明のため出力しない）
 - [x] sitemap の `lastmod` に `updatedDate`/`pubDate` を反映（`@astrojs/sitemap` serialize で記事101件に frontmatter の日付を反映。全URL一律の `lastmod: new Date()` は廃止）
-- [x] `404.astro` に `noindex` 付与
+- [x] `404.astro` に `noindex` 付与（BaseHead に `noindex` prop を追加して制御。併せて skip-link 用 `id="main-content"` 欠落と無効な `color: var(--gray)` も修正）
 - [~] ~~パンくず JSON-LD（BreadcrumbList）追加~~（Skip）
-- [~] ~~空 description のフォールバック自動生成~~（Skip）
+- [x] 空 description のフォールバック: 記事101件中99件が空のため、BaseHead で空なら `title` を meta/OGP/JSON-LD の description に使用（本文は変更せず）
 
 ## C. 不要要素の削除
 > ⚠️ 調査の誤り訂正: 当初「Starlight は未使用」と判断したが、**公開記事が Starlight に依存**していた（`2026/02/7.mdx` が `Aside`/`LinkCard`/`Code`、`2026/05/76.mdx` が `Icon` を import、`2026/02/8.mdx` が `/fonts/atkinson-bold.woff` を使用）。記事本文は変更禁止のため、`@astrojs/starlight` と Atkinson フォントは**残す**。`astro-expressive-code` も Starlight 経由の依存のため残す。

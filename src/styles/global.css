@@ -112,6 +112,14 @@ body {
 	transition: background-color .2s, color .2s;
 }
 
+/* 等幅フォントは body の font-size-adjust 継承を解除（コードのグリフ再スケール防止） */
+code,
+pre,
+kbd,
+samp {
+	font-size-adjust: none;
+}
+
 a {
 	color: inherit;
 	text-decoration: none;

@@ -28,16 +28,16 @@
 - [x] `BlogPost.astro` の重複テーマ判定（emoji用/Giscus用）を `window.__isDarkTheme()` 共通ヘルパーに統一
 
 ## B. SEO
-- [ ] **robots.txt のドメイン誤り修正** `t-log.pages.dev` → `t-3.dev`（`public/robots.txt`）★即効。可能なら `robots.txt.ts` 動的生成へ
-- [ ] JSON-LD 構造化データ追加（記事=BlogPosting / サイト=WebSite）（`BaseHead.astro` 拡張）
-- [ ] OGP画像の記事別対応: 固定R2画像 → frontmatter `heroImage` 活用＋フォールバック、絶対URL化、og:type 出し分け
-- [ ] ページ別 title/description 最適化（`about` / `index` / `blog/index` が `SITE_DESCRIPTION` 流用）
-- [ ] RSS に各 item の description を明示（`rss.xml.js`）
-- [ ] `og:locale=ja_JP` / `og:site_name` / `article:published_time` / `article:modified_time` / Twitter `@site` 追加
-- [ ] sitemap の `lastmod` に `updatedDate`/`pubDate` を反映（`@astrojs/sitemap` serialize）
-- [ ] `404.astro` に `noindex` 付与
-- [ ] パンくず JSON-LD（BreadcrumbList）追加 ※低優先
-- [ ] 空 description のフォールバック自動生成（本文先頭からの抜粋。本文は読み取りのみ）
+- [x] **robots.txt のドメイン誤り修正** `t-log.pages.dev` → `t-3.dev`（`public/robots.txt`）
+- [ ] JSON-LD 構造化データ追加（記事=BlogPosting / サイト=WebSite）（`BaseHead.astro` 拡張）→ 今回更新
+- [~] ~~OGP画像の記事別対応: heroImage 活用~~（Skip）
+- [x] ページ別 title/description 最適化（`SITE_DESCRIPTION` を実態に即した内容へ更新、about/blog一覧にページ固有 description。about の重複 `<Footer />` も除去）
+- [ ] RSS に各 item の description を明示（`rss.xml.js`）→ 今回更新
+- [ ] `og:locale=ja_JP` / `og:site_name` / `article:published_time` / `article:modified_time` / Twitter `@site` 追加 → 今回更新
+- [ ] sitemap の `lastmod` に `updatedDate`/`pubDate` を反映（`@astrojs/sitemap` serialize）→ 今回更新
+- [ ] `404.astro` に `noindex` 付与 → 今回更新
+- [~] ~~パンくず JSON-LD（BreadcrumbList）追加~~（Skip）
+- [~] ~~空 description のフォールバック自動生成~~（Skip）
 
 ## C. 不要要素の削除
 - [ ] **Starlight 削除**: `Header.astro` の `Icon`（moon/sun/github 3箇所）をインラインSVG化

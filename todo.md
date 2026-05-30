@@ -40,14 +40,15 @@
 - [~] ~~空 description のフォールバック自動生成~~（Skip）
 
 ## C. 不要要素の削除
-- [x] **Starlight 削除**: `Header.astro` の `Icon`（moon/sun/github 3箇所）をインラインSVG化
+> ⚠️ 調査の誤り訂正: 当初「Starlight は未使用」と判断したが、**公開記事が Starlight に依存**していた（`2026/02/7.mdx` が `Aside`/`LinkCard`/`Code`、`2026/05/76.mdx` が `Icon` を import、`2026/02/8.mdx` が `/fonts/atkinson-bold.woff` を使用）。記事本文は変更禁止のため、`@astrojs/starlight` と Atkinson フォントは**残す**。`astro-expressive-code` も Starlight 経由の依存のため残す。
+- [x] `Header.astro` の `Icon`（moon/sun/github 3箇所）をインラインSVG化（記事に依存しない安全な簡素化）
 - [x] `Share.astro` の未使用 `Icon` import を削除（`import {link} from "fs"` のデッドコードも併せて削除）
-- [x] `astro.config.mjs` から `starlight()` 設定・import を削除
-- [x] `package.json` から `@astrojs/starlight` と `starlight-blog` を削除
-- [x] **スターター残骸削除**: `public/fonts/atkinson-*.woff`（約46KB, 参照ゼロ）
+- [~] ~~`astro.config.mjs` から `starlight()` 設定・import を削除~~（取消: 記事が依存。残す）
+- [x] `package.json` から **`starlight-blog`** のみ削除（完全未使用。`@astrojs/starlight` は記事依存のため残す）
+- [~] ~~`public/fonts/atkinson-*.woff` 削除~~（取消: `2026/02/8.mdx` が使用。残す）
 - [x] **スターター残骸削除**: `src/assets/blog-placeholder-about.jpg`（参照ゼロ）
 - [x] **デッドコード削除**: `BaseHead.astro` の未使用 `image` prop + `FallbackImage` import + `src/assets/blog-placeholder-1.jpg`
-- [ ] `SITE_DESCRIPTION = "Welcome to my website!"`（スターター既定値）を実態に即した日本語へ置換
+- [x] ~~`SITE_DESCRIPTION` を実態に即した日本語へ置換~~（B-4 で対応済み）
 
 ## D. その他（設定集約・CSS）
 - [ ] Giscus 設定（repo/repoId/categoryId/mapping）を `consts.ts` の `GISCUS_CONFIG` へ集約（`BlogPost.astro`）

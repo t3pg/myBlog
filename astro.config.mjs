@@ -14,6 +14,8 @@ import remarkDirective from 'remark-directive';
 import { remarkCustomDirective } from './src/plugins/directive.mjs';
 import { remarkEmoji } from './src/plugins/emoji.mjs';
 
+import starlight from '@astrojs/starlight';
+
 // 記事のフロントマターから lastmod 用の日付（updatedDate 優先・無ければ pubDate）を
 // 連番スラッグごとに収集する。記事 URL は /blog/{連番}/。
 const blogDir = fileURLToPath(new URL('./src/content/blog', import.meta.url));
@@ -75,6 +77,17 @@ export default defineConfig({
 				// その他のページ（About など）
 				return { ...item, changefreq: 'monthly', priority: 0.5 };
 			},
+		}),
+		starlight({
+			title: 't-log',
+			tableOfContents: { minHeadingLevel: 1, maxHeadingLevel: 3 },
+			locales: {
+				root: {
+					label: '日本語',
+					lang: 'ja',
+				},
+			},
+			disable404Route: true,
 		}),
 	],
 	markdown: {

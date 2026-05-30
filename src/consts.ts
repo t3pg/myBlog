@@ -4,6 +4,8 @@
 export const SITE_TITLE = 't-log';
 export const SITE_DESCRIPTION =
 	'開発・ガジェット・日々の試行錯誤を記録する t-3 の個人ブログ。';
+export const SITE_AUTHOR = 't-3';
+export const X_HANDLE = '@t3pg_';
 
 // サイドバーに表示するタグ（手動設定）
 export const SIDEBAR_TAGS = [

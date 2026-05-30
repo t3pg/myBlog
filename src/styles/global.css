@@ -7,26 +7,33 @@
   - 本文 16px / 行間 1.85
 */
 
+/*
+ * カラートークンは light-dark() で「ライト値, ダーク値」を1か所に定義する。
+ * 適用の切り替えは color-scheme で行う:
+ *   - data-theme 未設定 → `light dark` で OS の prefers-color-scheme に追従
+ *   - data-theme="light" / "dark" → color-scheme を固定して上書き
+ * これにより従来の重複したダークトークン定義（@media 版 + data-theme 版）を排除。
+ */
 :root {
 	color-scheme: light dark;
 
-	/* Light tokens */
-	--bg: #fafaf8;
-	--surface: #ffffff;
-	--ink: #18181b;
-	--ink-2: #2c2c30;
-	--muted: #6b6b72;
-	--hairline: #e5e4df;
-	--hairline-strong: #d4d3cd;
-	--accent: #2337ff;
-	--accent-soft: rgba(35, 55, 255, 0.08);
-	--accent-text: #2337ff;
-	--code-bg: #f1f0ec;
-	--code-fg: #4a4a52;
-	--code-block-bg: #14161f;
-	--code-block-ink: #e6e8f0;
-	--code-block-header: #1c1f29;
-	--quote-bg: #f4f4fa;
+	/* Color tokens: light-dark(ライト, ダーク) */
+	--bg: light-dark(#fafaf8, #1a1d28);
+	--surface: light-dark(#ffffff, #232735);
+	--ink: light-dark(#18181b, #dcdfeb);
+	--ink-2: light-dark(#2c2c30, #b6b9c8);
+	--muted: light-dark(#6b6b72, #9298ab);
+	--hairline: light-dark(#e5e4df, #2a2e3d);
+	--hairline-strong: light-dark(#d4d3cd, #3a3f52);
+	--accent: light-dark(#2337ff, #8b97ff);
+	--accent-soft: light-dark(rgba(35, 55, 255, 0.08), rgba(139, 151, 255, 0.14));
+	--accent-text: light-dark(#2337ff, #a8b1ff);
+	--code-bg: light-dark(#f1f0ec, #262a38);
+	--code-fg: light-dark(#4a4a52, #c0c3d0);
+	--code-block-bg: light-dark(#14161f, #11131c);
+	--code-block-ink: light-dark(#e6e8f0, #d6d9e4);
+	--code-block-header: light-dark(#1c1f29, #181b25);
+	--quote-bg: light-dark(#f4f4fa, #232735);
 
 	/* Legacy compatibility */
 	--accent-dark: #000d8a;
@@ -40,45 +47,13 @@
 		0 8px 24px rgba(0, 0, 0, 0.10);
 }
 
-/* Dark — applied either via prefers-color-scheme or explicit data-theme */
-@media (prefers-color-scheme: dark) {
-	:root:not([data-theme="light"]) {
-		--bg: #1a1d28;
-		--surface: #232735;
-		--ink: #dcdfeb;
-		--ink-2: #b6b9c8;
-		--muted: #9298ab;
-		--hairline: #2a2e3d;
-		--hairline-strong: #3a3f52;
-		--accent: #8b97ff;
-		--accent-soft: rgba(139, 151, 255, 0.14);
-		--accent-text: #a8b1ff;
-		--code-bg: #262a38;
-		--code-fg: #c0c3d0;
-		--code-block-bg: #11131c;
-		--code-block-ink: #d6d9e4;
-		--code-block-header: #181b25;
-		--quote-bg: #232735;
-	}
+/* data-theme による明示指定は color-scheme を固定して light-dark() を切り替える */
+:root[data-theme="light"] {
+	color-scheme: light;
 }
 
 :root[data-theme="dark"] {
-	--bg: #1a1d28;
-	--surface: #232735;
-	--ink: #dcdfeb;
-	--ink-2: #b6b9c8;
-	--muted: #9298ab;
-	--hairline: #2a2e3d;
-	--hairline-strong: #3a3f52;
-	--accent: #8b97ff;
-	--accent-soft: rgba(139, 151, 255, 0.14);
-	--accent-text: #a8b1ff;
-	--code-bg: #262a38;
-	--code-fg: #c0c3d0;
-	--code-block-bg: #11131c;
-	--code-block-ink: #d6d9e4;
-	--code-block-header: #181b25;
-	--quote-bg: #232735;
+	color-scheme: dark;
 }
 
 * {

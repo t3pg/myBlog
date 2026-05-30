@@ -2,7 +2,12 @@
 // Import the global.css file here so that it is included on
 // all pages through the use of the <BaseHead /> component.
 import "../styles/global.css";
-import { SITE_TITLE, SITE_DESCRIPTION, SITE_AUTHOR } from "../consts";
+import {
+	SITE_TITLE,
+	SITE_DESCRIPTION,
+	SITE_AUTHOR,
+	GA_MEASUREMENT_ID,
+} from "../consts";
 
 interface Props {
 	title: string;
@@ -150,13 +155,13 @@ const jsonLd =
 </script>
 
 <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-CJ2FHPGXF4"></script>
-<script is:inline>
+<script async src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}></script>
+<script is:inline define:vars={{ gaId: GA_MEASUREMENT_ID }}>
 	window.dataLayer = window.dataLayer || [];
 	function gtag() {
 		dataLayer.push(arguments);
 	}
 	gtag("js", new Date());
 
-	gtag("config", "G-CJ2FHPGXF4");
+	gtag("config", gaId);
 </script>

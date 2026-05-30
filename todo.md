@@ -51,9 +51,9 @@
 - [x] ~~`SITE_DESCRIPTION` を実態に即した日本語へ置換~~（B-4 で対応済み）
 
 ## D. その他（設定集約・CSS）
-- [ ] Giscus 設定（repo/repoId/categoryId/mapping）を `consts.ts` の `GISCUS_CONFIG` へ集約（`BlogPost.astro`）
-- [ ] GA 測定ID（`G-CJ2FHPGXF4`）・サイトURL を `consts.ts` へ定数化
-- [ ] ダークモード CSS トークンの重複定義（`@media` 版と `[data-theme=dark]` 版, 約18行）を統合（`global.css`）
+- [x] Giscus 設定（repo/repoId/categoryId/mapping/lang）を `consts.ts` の `GISCUS_CONFIG` へ集約し `BlogPost.astro` から `define:vars` で参照
+- [x] GA 測定ID（`G-CJ2FHPGXF4`）を `consts.ts` の `GA_MEASUREMENT_ID` へ定数化（`BaseHead.astro` で `define:vars` 参照。サイトURLは既存の `Astro.site` を使用するため定数追加不要）
+- [x] ダークモード CSS トークンの重複定義（`@media` 版と `[data-theme=dark]` 版, 約18行）を `light-dark()` + `color-scheme` 切替で1か所に統合（`global.css`）
 
 ## E. パフォーマンス
 - [ ] 画像最適化: `astro:assets`（`<Image>`/`<Picture>`）を非記事領域（books カバー等）に導入

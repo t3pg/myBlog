@@ -8,6 +8,7 @@ import FormattedDate from "../components/FormattedDate.astro";
 import Header from "../components/Header.astro";
 import Sidebar from "../components/Sidebar.astro";
 import Share from "../components/Share.astro";
+import { GISCUS_CONFIG } from "../consts";
 
 type Props = CollectionEntry<"blog">["data"] & {
 	prev?: CollectionEntry<"blog">;
@@ -24,7 +25,13 @@ const hasToc = tocItems.length > 0;
 
 <html lang="ja">
 	<head>
-		<BaseHead title={title} description={description} />
+		<BaseHead
+			title={title}
+			description={description}
+			type="article"
+			publishedTime={pubDate}
+			modifiedTime={updatedDate}
+		/>
 	</head>
 
 	<body>
@@ -106,14 +113,18 @@ const hasToc = tocItems.length > 0;
 						</script>
 
 						<script is:inline>
+							/* テーマ判定の共通ヘルパー（絵文字・Giscus で共有） */
+							window.__isDarkTheme = function () {
+								var t = document.documentElement.getAttribute("data-theme");
+								return t === "dark" || (!t && window.matchMedia("(prefers-color-scheme: dark)").matches);
+							};
+						</script>
+
+						<script is:inline>
 							/* 絵文字: カラーモード切替に応じて src を差し替え */
 							(function () {
-								function isDark() {
-									var t = document.documentElement.getAttribute("data-theme");
-									return t === "dark" || (!t && window.matchMedia("(prefers-color-scheme: dark)").matches);
-								}
 								function applyEmojiTheme() {
-									var dark = isDark();
+									var dark = window.__isDarkTheme();
 									document.querySelectorAll("img.emoji-themed").forEach(function (img) {
 										var src = dark ? img.dataset.emojiDark : img.dataset.emojiLight;
 										if (src) {
@@ -167,15 +178,10 @@ const hasToc = tocItems.length > 0;
 						</nav>
 
 						<div class="giscus-wrapper">
-							<script is:inline>
+							<script is:inline define:vars={{ giscus: GISCUS_CONFIG }}>
 								(function () {
 									function getGiscusTheme() {
-										var theme = document.documentElement.getAttribute("data-theme");
-										if (theme === "dark") return "dark";
-										if (theme === "light") return "github-light";
-										return window.matchMedia("(prefers-color-scheme: dark)").matches
-											? "dark"
-											: "github-light";
+										return window.__isDarkTheme() ? "dark" : "github-light";
 									}
 
 									function sendGiscusTheme(t) {
@@ -189,17 +195,17 @@ const hasToc = tocItems.length > 0;
 
 									var script = document.createElement("script");
 									script.src = "https://giscus.app/client.js";
-									script.setAttribute("data-repo", "t3pg/myBlog");
-									script.setAttribute("data-repo-id", "R_kgDORN6zFw");
-									script.setAttribute("data-category", "Announcements");
-									script.setAttribute("data-category-id", "DIC_kwDORN6zF84C7SvK");
-									script.setAttribute("data-mapping", "pathname");
+									script.setAttribute("data-repo", giscus.repo);
+									script.setAttribute("data-repo-id", giscus.repoId);
+									script.setAttribute("data-category", giscus.category);
+									script.setAttribute("data-category-id", giscus.categoryId);
+									script.setAttribute("data-mapping", giscus.mapping);
 									script.setAttribute("data-strict", "0");
 									script.setAttribute("data-reactions-enabled", "1");
 									script.setAttribute("data-emit-metadata", "0");
 									script.setAttribute("data-input-position", "bottom");
 									script.setAttribute("data-theme", getGiscusTheme());
-									script.setAttribute("data-lang", "ja");
+									script.setAttribute("data-lang", giscus.lang);
 									script.setAttribute("data-loading", "lazy");
 									script.setAttribute("crossorigin", "anonymous");
 									script.async = true;

@@ -3,6 +3,23 @@
 
 export const SITE_TITLE = 't-log';
 export const SITE_DESCRIPTION = '日記兼技術メモ';
+export const SITE_AUTHOR = 'T';
+
+// Google Analytics 測定 ID
+export const GA_MEASUREMENT_ID = 'G-CJ2FHPGXF4';
+
+// 一覧ページのページネーション件数（ブログ一覧・タグ別一覧で共通）
+export const POSTS_PER_PAGE = 20;
+
+// Giscus（コメントシステム）設定
+export const GISCUS_CONFIG = {
+	repo: 't3pg/myBlog',
+	repoId: 'R_kgDORN6zFw',
+	category: 'Announcements',
+	categoryId: 'DIC_kwDORN6zF84C7SvK',
+	mapping: 'pathname',
+	lang: 'ja',
+};
 
 // サイドバーに表示するタグ（手動設定）
 export const SIDEBAR_TAGS = [

@@ -19,7 +19,6 @@
     "remark-directive": "^4.0.0",
     "remark-link-card-plus": "^0.7.4",
     "sharp": "^0.34.3",
-    "starlight-blog": "^0.26.1",
     "unist-util-visit": "^5.1.0"
   }
 }

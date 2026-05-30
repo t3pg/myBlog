@@ -1,0 +1,33 @@
+---
+import { getCollection } from "astro:content";
+import type { GetStaticPaths } from "astro";
+import PostListLayout from "../../../layouts/PostListLayout.astro";
+import { SITE_DESCRIPTION, SITE_TITLE, POSTS_PER_PAGE } from "../../../consts";
+
+// ページ1は /blog/ が担当するため、ここではページ2以降のみ生成する。
+export const getStaticPaths = (async ({ paginate }) => {
+	const allPosts = (await getCollection("blog")).sort(
+		(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+	);
+	// ページ1（/blog/）は index.astro が担当するため除外
+	return paginate(allPosts, { pageSize: POSTS_PER_PAGE }).filter(
+		(entry) => entry.props.page.currentPage !== 1,
+	);
+}) satisfies GetStaticPaths;
+
+const { page } = Astro.props;
+
+const hrefForPage = (p: number) => (p <= 1 ? "/blog/" : `/blog/page/${p}/`);
+---
+
+<PostListLayout
+	metaTitle={`${SITE_TITLE}（${page.currentPage}ページ目）`}
+	metaDescription={SITE_DESCRIPTION}
+	heading="All posts"
+	totalCount={page.total}
+	showTags={true}
+	posts={page.data}
+	currentPage={page.currentPage}
+	lastPage={page.lastPage}
+	hrefForPage={hrefForPage}
+/>

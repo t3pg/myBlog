@@ -12,6 +12,7 @@ import { SITE_TITLE } from "../consts";
         <BaseHead
             title={`404 - ${SITE_TITLE}`}
             description="ページが見つかりませんでした"
+            noindex={true}
         />
         <style>
             .not-found {
@@ -21,7 +22,7 @@ import { SITE_TITLE } from "../consts";
             .not-found h1 {
                 font-size: 5em;
                 margin: 0 0 0.1em;
-                color: var(--gray);
+                color: rgb(var(--gray));
                 line-height: 1;
             }
             .not-found p {
@@ -34,7 +35,7 @@ import { SITE_TITLE } from "../consts";
     <body>
         <Header />
         <div class="layout-wrapper">
-            <main>
+            <main id="main-content">
                 <div class="not-found">
                     <h1>404</h1>
                     <p>ページが見つかりませんでした</p>

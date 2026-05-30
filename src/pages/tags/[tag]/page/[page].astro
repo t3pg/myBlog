@@ -1,0 +1,69 @@
+---
+import { getCollection } from "astro:content";
+import type { GetStaticPaths } from "astro";
+import PostListLayout from "../../../../layouts/PostListLayout.astro";
+import { SITE_TITLE, POSTS_PER_PAGE } from "../../../../consts";
+
+// タグごとに2ページ目以降のパスを生成する（1ページ目は /tags/{tag}/ が担当）。
+export const getStaticPaths = (async ({ paginate }) => {
+	const allPosts = await getCollection("blog");
+	const tagSet = new Set<string>();
+	allPosts.forEach((post) => {
+		(post.data.tags ?? []).forEach((tag) => tagSet.add(tag));
+	});
+
+	const tagEntries = await getCollection("tags");
+
+	return [...tagSet].flatMap((tag) => {
+		const tagged = allPosts
+			.filter((post) => post.data.tags?.includes(tag))
+			.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+		const tagEntry = tagEntries.find((t) => t.id === tag);
+		const description = tagEntry?.data.description ?? "";
+		return paginate(tagged, {
+			params: { tag },
+			pageSize: POSTS_PER_PAGE,
+			props: { tag, description },
+		}).filter((entry) => entry.props.page.currentPage !== 1);
+	});
+}) satisfies GetStaticPaths;
+
+const { page, tag, description } = Astro.props;
+
+const hrefForPage = (p: number) =>
+	p <= 1 ? `/tags/${tag}/` : `/tags/${tag}/page/${p}/`;
+---
+
+<PostListLayout
+	metaTitle={`${tag}（${page.currentPage}ページ目） | ${SITE_TITLE}`}
+	metaDescription={description || `${tag} タグの記事一覧`}
+	heading={`#${tag}`}
+	totalCount={page.total}
+	posts={page.data}
+	currentPage={page.currentPage}
+	lastPage={page.lastPage}
+	hrefForPage={hrefForPage}
+>
+	{description && <p slot="subhead" class="pg-description">{description}</p>}
+	<a slot="footer-extra" class="back" href="/tags/">← タグ一覧へ</a>
+</PostListLayout>
+
+<style>
+	.pg-description {
+		font-size: 14px;
+		color: var(--muted);
+		margin: -12px 0 24px;
+		line-height: 1.7;
+	}
+	.back {
+		display: inline-block;
+		margin-top: 28px;
+		font-size: 13px;
+		color: var(--muted);
+		text-decoration: none;
+		transition: color 0.15s;
+	}
+	.back:hover {
+		color: var(--accent-text);
+	}
+</style>

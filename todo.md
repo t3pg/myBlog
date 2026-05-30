@@ -56,10 +56,10 @@
 - [x] ダークモード CSS トークンの重複定義（`@media` 版と `[data-theme=dark]` 版, 約18行）を `light-dark()` + `color-scheme` 切替で1か所に統合（`global.css`）
 
 ## E. パフォーマンス
-- [ ] 画像最適化: `astro:assets`（`<Image>`/`<Picture>`）を非記事領域（books カバー等）に導入
+- [~] ~~画像最適化: md 内画像をビルド時に Astro `<Image>` へ自動変換~~（保留: 記事内の画像は全6件すべてリモートURL（r2.dev/media.t-3.dev/books.google.com）で、Astro のビルド時最適化はローカル画像専用のため現コンテンツには非適用。記事本文も変更禁止。要相談）
 - [ ] Google Fonts を Astro 6 `astro:fonts` で自己ホスト＋日本語サブセット化
 - [ ] Google Analytics を `@astrojs/partytown` で Web Worker にオフロード
-- [ ] **ブログ一覧のページネーション**（現在 全101記事を1ページ出力）`paginate()` で `/blog/[page]` 化、rel prev/next 付与
+- [x] **ブログ一覧・タグ別一覧のページネーション**（20件/ページ）。ページ1は既存URL（`/blog/`・`/tags/{tag}/`）維持、2ページ目以降は `/blog/page/N/`・`/tags/{tag}/page/N/`（連番記事URL `/blog/{連番}/` との衝突回避）。rel prev/next 付与。共通化のため `PostList.astro`・`Pagination.astro`・`PostListLayout.astro` を新設
 
 ## F. heroImage の扱い
 - [ ] `heroImage` は schema 定義済みだが表示箇所ゼロ → 記事ヘッダー/一覧/OGP で活用（B-3 と連動）、または schema から削除

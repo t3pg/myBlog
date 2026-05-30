@@ -1,0 +1,75 @@
+---
+interface Props {
+	currentPage: number;
+	lastPage: number;
+	// ページ番号からURLを生成する関数。ページ1は基底URL（例: /blog/）を返す。
+	hrefForPage: (page: number) => string;
+}
+
+const { currentPage, lastPage, hrefForPage } = Astro.props;
+
+const prevUrl = currentPage > 1 ? hrefForPage(currentPage - 1) : null;
+const nextUrl = currentPage < lastPage ? hrefForPage(currentPage + 1) : null;
+---
+
+{
+	lastPage > 1 && (
+		<nav class="pagination" aria-label="ページネーション">
+			{prevUrl ? (
+				<a class="page-link prev" href={prevUrl} rel="prev">
+					← 前へ
+				</a>
+			) : (
+				<span class="page-link prev disabled">← 前へ</span>
+			)}
+
+			<span class="page-status">
+				{currentPage} / {lastPage}
+			</span>
+
+			{nextUrl ? (
+				<a class="page-link next" href={nextUrl} rel="next">
+					次へ →
+				</a>
+			) : (
+				<span class="page-link next disabled">次へ →</span>
+			)}
+		</nav>
+	)
+}
+
+<style>
+	.pagination {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 16px;
+		margin-top: 32px;
+		padding-top: 20px;
+		border-top: 1px solid var(--hairline);
+	}
+
+	.page-link {
+		font-size: 13.5px;
+		font-weight: 600;
+		text-decoration: none;
+		color: var(--accent-text);
+		transition: color 0.15s;
+		white-space: nowrap;
+	}
+	.page-link:hover {
+		color: var(--accent);
+	}
+	.page-link.disabled {
+		color: var(--muted);
+		opacity: 0.5;
+		pointer-events: none;
+	}
+
+	.page-status {
+		font-size: 12.5px;
+		color: var(--muted);
+		font-variant-numeric: tabular-nums;
+		letter-spacing: 0.02em;
+	}
+</style>

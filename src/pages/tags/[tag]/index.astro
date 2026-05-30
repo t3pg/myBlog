@@ -1,0 +1,70 @@
+---
+import { getCollection } from "astro:content";
+import type { GetStaticPaths } from "astro";
+import PostListLayout from "../../../layouts/PostListLayout.astro";
+import { SITE_TITLE, POSTS_PER_PAGE } from "../../../consts";
+
+export const getStaticPaths = (async () => {
+	const posts = await getCollection("blog");
+	const tagSet = new Set<string>();
+	posts.forEach((post) => {
+		(post.data.tags ?? []).forEach((tag) => tagSet.add(tag));
+	});
+	return [...tagSet].map((tag) => ({ params: { tag }, props: { tag } }));
+}) satisfies GetStaticPaths;
+
+interface Props {
+	tag: string;
+}
+
+const { tag } = Astro.props;
+
+const allPosts = await getCollection("blog");
+const tagged = allPosts
+	.filter((post) => post.data.tags?.includes(tag))
+	.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+
+const lastPage = Math.max(1, Math.ceil(tagged.length / POSTS_PER_PAGE));
+const posts = tagged.slice(0, POSTS_PER_PAGE);
+
+const tagEntries = await getCollection("tags");
+const tagEntry = tagEntries.find((t) => t.id === tag);
+const description = tagEntry?.data.description ?? "";
+
+const hrefForPage = (page: number) =>
+	page <= 1 ? `/tags/${tag}/` : `/tags/${tag}/page/${page}/`;
+---
+
+<PostListLayout
+	metaTitle={`${tag} | ${SITE_TITLE}`}
+	metaDescription={description || `${tag} タグの記事一覧`}
+	heading={`#${tag}`}
+	totalCount={tagged.length}
+	posts={posts}
+	currentPage={1}
+	lastPage={lastPage}
+	hrefForPage={hrefForPage}
+>
+	{description && <p slot="subhead" class="pg-description">{description}</p>}
+	<a slot="footer-extra" class="back" href="/tags/">← タグ一覧へ</a>
+</PostListLayout>
+
+<style>
+	.pg-description {
+		font-size: 14px;
+		color: var(--muted);
+		margin: -12px 0 24px;
+		line-height: 1.7;
+	}
+	.back {
+		display: inline-block;
+		margin-top: 28px;
+		font-size: 13px;
+		color: var(--muted);
+		text-decoration: none;
+		transition: color 0.15s;
+	}
+	.back:hover {
+		color: var(--accent-text);
+	}
+</style>

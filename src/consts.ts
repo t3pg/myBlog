@@ -9,6 +9,9 @@ export const SITE_AUTHOR = 'T';
 // Google Analytics 測定 ID
 export const GA_MEASUREMENT_ID = 'G-CJ2FHPGXF4';
 
+// 一覧ページのページネーション件数（ブログ一覧・タグ別一覧で共通）
+export const POSTS_PER_PAGE = 20;
+
 // Giscus（コメントシステム）設定
 export const GISCUS_CONFIG = {
 	repo: 't3pg/myBlog',

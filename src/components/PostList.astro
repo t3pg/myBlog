@@ -1,0 +1,127 @@
+---
+import type { CollectionEntry } from "astro:content";
+import FormattedDate from "./FormattedDate.astro";
+
+interface Props {
+	posts: CollectionEntry<"blog">[];
+	// 一覧でタグを表示するか（ブログ一覧では true、タグ別一覧では false）
+	showTags?: boolean;
+}
+
+const { posts, showTags = false } = Astro.props;
+
+// 記事 URL は /blog/{連番}/。id 末尾の連番を使う。
+const slugOf = (post: CollectionEntry<"blog">) => post.id.split("/").pop();
+---
+
+<section class="post-list">
+	{
+		posts.map((post) => (
+			<a href={`/blog/${slugOf(post)}/`} class="post-row">
+				<div class="post-date">
+					<FormattedDate date={post.data.pubDate} />
+				</div>
+				<div class="post-main">
+					<h2 class="post-title">{post.data.title}</h2>
+					{post.data.description && (
+						<p class="post-excerpt">{post.data.description}</p>
+					)}
+					{showTags && post.data.tags && post.data.tags.length > 0 && (
+						<div class="post-tags">
+							{post.data.tags.map((t) => (
+								<span class="post-tag">{t}</span>
+							))}
+						</div>
+					)}
+				</div>
+			</a>
+		))
+	}
+</section>
+
+<style>
+	.post-list {
+		display: block;
+	}
+
+	.post-row {
+		display: grid;
+		grid-template-columns: 92px 1fr;
+		gap: 24px;
+		padding: 22px 0;
+		border-bottom: 1px solid var(--hairline);
+		align-items: baseline;
+		text-decoration: none;
+		color: inherit;
+	}
+
+	.post-date {
+		color: var(--muted);
+		font-size: 12.5px;
+		font-variant-numeric: tabular-nums;
+		letter-spacing: 0.02em;
+		padding-top: 4px;
+	}
+
+	.post-main {
+		min-width: 0;
+	}
+
+	.post-title {
+		font-size: 17px;
+		font-weight: 700;
+		line-height: 1.5;
+		margin: 0 0 6px 0;
+		color: var(--accent-text);
+		text-decoration: underline;
+		text-decoration-color: transparent;
+		text-decoration-thickness: 1px;
+		text-underline-offset: 3px;
+		transition: text-decoration-color 0.15s;
+	}
+	.post-row:hover .post-title {
+		text-decoration-color: var(--accent);
+	}
+
+	.post-excerpt {
+		font-size: 13.5px;
+		line-height: 1.7;
+		color: var(--muted);
+		margin: 6px 0 8px;
+		display: -webkit-box;
+		-webkit-line-clamp: 2;
+		-webkit-box-orient: vertical;
+		overflow: hidden;
+	}
+
+	.post-tags {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 14px;
+		margin-top: 8px;
+	}
+	.post-tag {
+		font-size: 11.5px;
+		color: var(--muted);
+		letter-spacing: 0.02em;
+	}
+	.post-tag::before {
+		content: "#";
+		margin-right: 1px;
+		opacity: 0.55;
+	}
+
+	@media (max-width: 720px) {
+		.post-row {
+			grid-template-columns: 1fr;
+			gap: 6px;
+			padding: 18px 0;
+		}
+		.post-date {
+			padding-top: 0;
+		}
+		.post-title {
+			font-size: 16px;
+		}
+	}
+</style>

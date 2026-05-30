@@ -40,13 +40,13 @@
 - [~] ~~空 description のフォールバック自動生成~~（Skip）
 
 ## C. 不要要素の削除
-- [ ] **Starlight 削除**: `Header.astro` の `Icon`（moon/sun/github 3箇所）をインラインSVG化
-- [ ] `Share.astro` の未使用 `Icon` import を削除（デッドコード）
-- [ ] `astro.config.mjs` から `starlight()` 設定・import を削除
-- [ ] `package.json` から `@astrojs/starlight` と `starlight-blog` を削除
-- [ ] **スターター残骸削除**: `public/fonts/atkinson-*.woff`（約46KB, 参照ゼロ）
-- [ ] **スターター残骸削除**: `src/assets/blog-placeholder-about.jpg`（参照ゼロ）
-- [ ] **デッドコード削除**: `BaseHead.astro` の未使用 `image` prop + `FallbackImage` import + `src/assets/blog-placeholder-1.jpg`（B-3 でフォールバック配線するなら作り直し）
+- [x] **Starlight 削除**: `Header.astro` の `Icon`（moon/sun/github 3箇所）をインラインSVG化
+- [x] `Share.astro` の未使用 `Icon` import を削除（`import {link} from "fs"` のデッドコードも併せて削除）
+- [x] `astro.config.mjs` から `starlight()` 設定・import を削除
+- [x] `package.json` から `@astrojs/starlight` と `starlight-blog` を削除
+- [x] **スターター残骸削除**: `public/fonts/atkinson-*.woff`（約46KB, 参照ゼロ）
+- [x] **スターター残骸削除**: `src/assets/blog-placeholder-about.jpg`（参照ゼロ）
+- [x] **デッドコード削除**: `BaseHead.astro` の未使用 `image` prop + `FallbackImage` import + `src/assets/blog-placeholder-1.jpg`
 - [ ] `SITE_DESCRIPTION = "Welcome to my website!"`（スターター既定値）を実態に即した日本語へ置換
 
 ## D. その他（設定集約・CSS）

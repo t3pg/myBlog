@@ -10,17 +10,23 @@ interface Props {
 	type?: "website" | "article";
 	publishedTime?: Date;
 	modifiedTime?: Date;
+	noindex?: boolean;
 }
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 
 const {
 	title,
-	description,
+	description: rawDescription,
 	type = "website",
 	publishedTime,
 	modifiedTime,
+	noindex = false,
 } = Astro.props;
+
+// description が空の記事が多いため、空なら title をフォールバックに使う
+const description =
+	rawDescription && rawDescription.trim() !== "" ? rawDescription : title;
 
 const heroImage =
 	"https://pub-e6ff8f38dbb24bb0bef4e304eb94a5de.r2.dev/heroImage.png";
@@ -68,6 +74,7 @@ const jsonLd =
 	href={new URL("rss.xml", Astro.site)}
 />
 <meta name="generator" content={Astro.generator} />
+{noindex && <meta name="robots" content="noindex" />}
 
 <!-- Theme color (matches --bg of light/dark) -->
 <meta name="theme-color" content="#fafaf8" media="(prefers-color-scheme: light)" />

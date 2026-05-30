@@ -25,7 +25,7 @@
 - [~] ~~`src/lib/posts.ts` を新設し記事取得＋日付降順ソートを共通化~~（Skip）
 - [~] ~~重複ソートを置換: `index.astro` / `blog/index.astro` / `tags/[tag].astro` / `Sidebar.astro`~~（Skip）
 - [~] ~~投稿リスト共通コンポーネント `PostList.astro` を作成~~（Skip）
-- [ ] `BlogPost.astro` の重複テーマ判定（emoji用/Giscus用）を1ヘルパーに統一、`is:inline` スクリプトを整理 → 今回更新
+- [x] `BlogPost.astro` の重複テーマ判定（emoji用/Giscus用）を `window.__isDarkTheme()` 共通ヘルパーに統一
 
 ## B. SEO
 - [ ] **robots.txt のドメイン誤り修正** `t-log.pages.dev` → `t-3.dev`（`public/robots.txt`）★即効。可能なら `robots.txt.ts` 動的生成へ

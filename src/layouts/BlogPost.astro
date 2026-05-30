@@ -106,14 +106,18 @@ const hasToc = tocItems.length > 0;
 						</script>
 
 						<script is:inline>
+							/* テーマ判定の共通ヘルパー（絵文字・Giscus で共有） */
+							window.__isDarkTheme = function () {
+								var t = document.documentElement.getAttribute("data-theme");
+								return t === "dark" || (!t && window.matchMedia("(prefers-color-scheme: dark)").matches);
+							};
+						</script>
+
+						<script is:inline>
 							/* 絵文字: カラーモード切替に応じて src を差し替え */
 							(function () {
-								function isDark() {
-									var t = document.documentElement.getAttribute("data-theme");
-									return t === "dark" || (!t && window.matchMedia("(prefers-color-scheme: dark)").matches);
-								}
 								function applyEmojiTheme() {
-									var dark = isDark();
+									var dark = window.__isDarkTheme();
 									document.querySelectorAll("img.emoji-themed").forEach(function (img) {
 										var src = dark ? img.dataset.emojiDark : img.dataset.emojiLight;
 										if (src) {
@@ -170,12 +174,7 @@ const hasToc = tocItems.length > 0;
 							<script is:inline>
 								(function () {
 									function getGiscusTheme() {
-										var theme = document.documentElement.getAttribute("data-theme");
-										if (theme === "dark") return "dark";
-										if (theme === "light") return "github-light";
-										return window.matchMedia("(prefers-color-scheme: dark)").matches
-											? "dark"
-											: "github-light";
+										return window.__isDarkTheme() ? "dark" : "github-light";
 									}
 
 									function sendGiscusTheme(t) {

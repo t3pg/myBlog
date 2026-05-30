@@ -23,7 +23,7 @@ const recentPosts = (await getCollection("blog"))
 			<main id="main-content">
 				<header class="home-intro">
 					<h1 class="home-title">{SITE_TITLE}</h1>
-					<p class="home-desc">日々のメモ。開発・ツール・気になったこと。</p>
+					<p class="home-desc">{SITE_DESCRIPTION}</p>
 				</header>
 
 				<section class="recent-section">
@@ -36,7 +36,9 @@ const recentPosts = (await getCollection("blog"))
 									class="post-row"
 								>
 									<div class="post-date">
-										<FormattedDate date={post.data.pubDate} />
+										<FormattedDate
+											date={post.data.pubDate}
+										/>
 									</div>
 									<div class="post-main">
 										<span class="post-title">
@@ -57,7 +59,9 @@ const recentPosts = (await getCollection("blog"))
 							))
 						}
 					</div>
-					<a href="/blog/" class="all-posts-link">すべての記事を見る →</a>
+					<a href="/blog/" class="all-posts-link"
+						>すべての記事を見る →</a
+					>
 				</section>
 			</main>
 			<Sidebar />
@@ -134,7 +138,7 @@ const recentPosts = (await getCollection("blog"))
 		text-decoration-color: transparent;
 		text-decoration-thickness: 1px;
 		text-underline-offset: 3px;
-		transition: text-decoration-color .15s;
+		transition: text-decoration-color 0.15s;
 	}
 	.post-row:hover .post-title {
 		text-decoration-color: var(--accent);
@@ -162,7 +166,7 @@ const recentPosts = (await getCollection("blog"))
 		font-size: 13px;
 		color: var(--muted);
 		text-decoration: none;
-		transition: color .15s;
+		transition: color 0.15s;
 	}
 	.all-posts-link:hover {
 		color: var(--accent-text);

@@ -1,6 +1,7 @@
 ---
 import { getCollection } from "astro:content";
 import { SIDEBAR_TAGS } from "../consts";
+import { SITE_DESCRIPTION } from "../consts";
 
 const allPosts = await getCollection("blog");
 const sorted = [...allPosts].sort(
@@ -32,7 +33,7 @@ const sortedMonths = [...monthMap.entries()].sort((a, b) =>
 			<div class="profile-avatar" aria-hidden="true">t</div>
 			<div>
 				<div class="profile-handle">t3pg</div>
-				<div class="profile-bio">日々のメモ。</div>
+				<div class="profile-bio">{SITE_DESCRIPTION}</div>
 			</div>
 		</div>
 	</section>
@@ -166,7 +167,7 @@ const sortedMonths = [...monthMap.entries()].sort((a, b) =>
 		line-height: 1.5;
 		padding: 0;
 		text-decoration: none;
-		transition: color .15s;
+		transition: color 0.15s;
 	}
 
 	.sidebar-list li a:hover {
@@ -196,7 +197,7 @@ const sortedMonths = [...monthMap.entries()].sort((a, b) =>
 		text-decoration: none;
 		padding: 0;
 		background: transparent;
-		transition: color .15s;
+		transition: color 0.15s;
 	}
 	.tag-pill::before {
 		content: "#";
@@ -214,7 +215,7 @@ const sortedMonths = [...monthMap.entries()].sort((a, b) =>
 		font-size: 12px;
 		color: var(--muted);
 		text-decoration: none;
-		transition: color .15s;
+		transition: color 0.15s;
 	}
 
 	.all-tags-link:hover {

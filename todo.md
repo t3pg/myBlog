@@ -32,7 +32,7 @@
 - [x] JSON-LD 構造化データ追加（記事=BlogPosting / サイト=WebSite）（`BaseHead.astro` 拡張）
 - [~] ~~OGP画像の記事別対応: heroImage 活用~~（Skip）
 - [x] ページ別 title/description 最適化（`SITE_DESCRIPTION` を実態に即した内容へ更新、about/blog一覧にページ固有 description。about の重複 `<Footer />` も除去）
-- [ ] RSS に各 item の description を明示（`rss.xml.js`）→ 今回更新
+- [x] RSS に各 item の description を明示し、壊れていたリンク（`/blog/{id}/`→`/blog/{連番}/`）を修正・日付降順ソート（`rss.xml.js`）
 - [x] `og:locale=ja_JP` / `og:site_name` / `article:published_time` / `article:modified_time` / Twitter `@site`・`@creator` 追加
 - [ ] sitemap の `lastmod` に `updatedDate`/`pubDate` を反映（`@astrojs/sitemap` serialize）→ 今回更新
 - [ ] `404.astro` に `noindex` 付与 → 今回更新

@@ -3,7 +3,7 @@
 ## パフォーマンス
 - [x] Google Fonts をノンブロッキング読み込みに変更 (`BaseHead.astro`)
 - [x] Speculation Rules API でページプリフェッチを追加 (`BaseHead.astro`)
-- [ ] `font-size-adjust` でフォントスワップ時のCLSを低減（要フォントメトリクス計測）
+- [x] `font-size-adjust` でフォントスワップ時のCLSを低減（`global.css`、Noto Sans JP のアスペクト比 0.54）
 
 ## UX / モダンCSS
 - [x] Cross-document View Transitions を追加 (`global.css`)
@@ -22,10 +22,10 @@
 > 制約: 記事本文（`src/content/blog/**` のフロントマターより下）は変更しない / 記事URL `/blog/{連番}/` は Giscus・SNS共有と紐づくため変更しない / `astro-expressive-code` は全コードブロックに自動適用される実利用中の依存のため削除しない。
 
 ## A. 可読性・シンプル化
-- [ ] `src/lib/posts.ts` を新設し記事取得＋日付降順ソートを共通化（`sortByDateDesc` / `getSortedPosts` / `getRecentPosts`）
-- [ ] 重複ソートを置換: `index.astro` / `blog/index.astro` / `tags/[tag].astro` / `Sidebar.astro`
-- [ ] 投稿リスト共通コンポーネント `PostList.astro` を作成（props: posts, showExcerpt, showTags）※任意
-- [ ] `BlogPost.astro` の重複テーマ判定（emoji用/Giscus用）を1ヘルパーに統一、`is:inline` スクリプトを整理
+- [~] ~~`src/lib/posts.ts` を新設し記事取得＋日付降順ソートを共通化~~（Skip）
+- [~] ~~重複ソートを置換: `index.astro` / `blog/index.astro` / `tags/[tag].astro` / `Sidebar.astro`~~（Skip）
+- [~] ~~投稿リスト共通コンポーネント `PostList.astro` を作成~~（Skip）
+- [ ] `BlogPost.astro` の重複テーマ判定（emoji用/Giscus用）を1ヘルパーに統一、`is:inline` スクリプトを整理 → 今回更新
 
 ## B. SEO
 - [ ] **robots.txt のドメイン誤り修正** `t-log.pages.dev` → `t-3.dev`（`public/robots.txt`）★即効。可能なら `robots.txt.ts` 動的生成へ

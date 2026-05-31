@@ -13,6 +13,7 @@
     "@astrojs/rss": "^4.0.15",
     "@astrojs/sitemap": "^3.7.0",
     "@astrojs/starlight": "^0.39.2",
+    "@aws-sdk/client-s3": "^3.1057.0",
     "astro": "^6.3.1",
     "astro-mermaid": "^2.0.1",
     "mermaid": "^11.15.0",

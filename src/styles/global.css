@@ -521,6 +521,61 @@ img {
 }
 
 /* ============================================================
+   YouTube 埋め込み
+   ============================================================ */
+.yt-embed {
+	position: relative;
+	aspect-ratio: 16 / 9;
+	background: #000;
+	border-radius: 8px;
+	overflow: hidden;
+	margin: 1.5em 0;
+}
+
+.yt-thumb {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	display: block;
+	transition: filter 0.2s;
+}
+
+.yt-embed:hover .yt-thumb {
+	filter: brightness(0.75);
+}
+
+.yt-play {
+	position: absolute;
+	inset: 0;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background: transparent;
+	border: none;
+	cursor: pointer;
+	padding: 0;
+}
+
+.yt-icon {
+	width: 68px;
+	height: 48px;
+	filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.5));
+	transition: transform 0.15s;
+}
+
+.yt-play:hover .yt-icon {
+	transform: scale(1.1);
+}
+
+.yt-embed iframe {
+	position: absolute;
+	inset: 0;
+	width: 100%;
+	height: 100%;
+	border: none;
+}
+
+/* ============================================================
    Cross-document View Transitions (MPA page navigation)
    ============================================================ */
 @media (prefers-reduced-motion: no-preference) {

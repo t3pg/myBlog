@@ -96,6 +96,21 @@ const hasToc = tocItems.length > 0;
 						<slot />
 
 						<script is:inline>
+							/* YouTube 埋め込み: クリックでサムネイルを iframe に差し替え */
+							document.addEventListener('click', function (e) {
+								var btn = e.target.closest('.yt-play');
+								if (!btn) return;
+								var embed = btn.closest('.yt-embed');
+								var src = btn.dataset.src;
+								if (!embed || !src) return;
+								embed.innerHTML =
+									'<iframe src="' + src + '" ' +
+									'allow="autoplay;encrypted-media;picture-in-picture" ' +
+									'allowfullscreen loading="lazy" title="YouTube動画"></iframe>';
+							});
+						</script>
+
+						<script is:inline>
 							/* リンクカード: OGP画像読み込み失敗時にサムネイル欄を非表示 */
 							document
 								.querySelectorAll(

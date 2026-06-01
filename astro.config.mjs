@@ -13,6 +13,7 @@ import mermaid from 'astro-mermaid';
 import remarkDirective from 'remark-directive';
 import { remarkCustomDirective } from './src/plugins/directive.mjs';
 import { remarkEmoji } from './src/plugins/emoji.mjs';
+import { remarkYoutube } from './src/plugins/youtube.mjs';
 
 import starlight from '@astrojs/starlight';
 
@@ -92,6 +93,7 @@ export default defineConfig({
 	],
 	markdown: {
 		remarkPlugins: [
+			remarkYoutube,
 			[remarkLinkCard, { cache: true }],
 			remarkDirective,
 			remarkCustomDirective,

@@ -42,3 +42,5 @@ R2/images
 
 # ビルド時にダウンロードされる YouTube サムネイルキャッシュ
 public/yt-thumbs/
+
+tags.md

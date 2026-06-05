@@ -14,6 +14,7 @@ import remarkDirective from 'remark-directive';
 import { remarkCustomDirective } from './src/plugins/directive.mjs';
 import { remarkEmoji } from './src/plugins/emoji.mjs';
 import { remarkYoutube } from './src/plugins/youtube.mjs';
+import { r2ResponsiveImageIntegration, rehypeResponsiveImage } from './src/plugins/responsiveImage.mjs';
 
 import starlight from '@astrojs/starlight';
 
@@ -46,6 +47,7 @@ for (const file of collectBlogFiles(blogDir)) {
 export default defineConfig({
 	site: 'https://t-3.dev',
 	integrations: [
+		r2ResponsiveImageIntegration(),
 		mermaid(),
 		astroExpressiveCode(),
 		mdx(),
@@ -92,6 +94,7 @@ export default defineConfig({
 		}),
 	],
 	markdown: {
+		rehypePlugins: [rehypeResponsiveImage],
 		remarkPlugins: [
 			remarkYoutube,
 			[remarkLinkCard, { cache: true }],

@@ -41,7 +41,7 @@ const CONFIG = {
     accessKeyId: process.env.R2_ACCESS_KEY_ID,
     secretAccessKey: process.env.R2_SECRET_ACCESS_KEY,
     bucketName: process.env.R2_BUCKET_NAME,
-    publicBaseUrl: process.env.R2_PUBLIC_BASE_URL,
+    publicBaseUrl: process.env.R2_PUBLIC_BASE_URL.replace(/\/$/, ""),
     region: "auto",
 };
 
@@ -51,6 +51,7 @@ const CONFIG = {
 const { S3Client, PutObjectCommand, HeadObjectCommand } = require("@aws-sdk/client-s3");
 const fs = require("fs");
 const path = require("path");
+const sharp = require("sharp");
 
 const client = new S3Client({
     region: CONFIG.region,
@@ -61,64 +62,138 @@ const client = new S3Client({
     },
 });
 
+// sharp が対応している画像形式
+const IMAGE_EXTENSIONS = new Set([
+    ".jpg", ".jpeg", ".png", ".webp", ".gif",
+    ".tiff", ".tif", ".avif", ".heic", ".heif",
+]);
+
+function isImage(filePath) {
+    return IMAGE_EXTENSIONS.has(path.extname(filePath).toLowerCase());
+}
+
+async function objectExists(key) {
+    try {
+        await client.send(new HeadObjectCommand({ Bucket: CONFIG.bucketName, Key: key }));
+        return true;
+    } catch (err) {
+        if (err.name === "NotFound" || err.$metadata?.httpStatusCode === 404) return false;
+        throw err;
+    }
+}
+
+async function checkConflict(key) {
+    console.log(`[INFO] 衝突チェック中: ${key}`);
+    if (await objectExists(key)) {
+        console.error(`[エラー] 同名のファイルがR2上に既に存在します: ${key}`);
+        console.error("アップロードを中止しました。ファイル名を変更してから再実行してください。");
+        process.exit(1);
+    }
+}
+
+async function putObject(key, body, contentType) {
+    const params = {
+        Bucket: CONFIG.bucketName,
+        Key: key,
+        Body: body,
+    };
+    if (contentType) params.ContentType = contentType;
+    console.log(`[INFO] アップロード中: ${key}`);
+    await client.send(new PutObjectCommand(params));
+    console.log(`[INFO] アップロード完了: ${key}`);
+}
+
+// 画像ファイル: PC版・モバイル版の2種類を AVIF に変換してアップロード
+async function uploadImage(filePath) {
+    const ext = path.extname(filePath).toLowerCase();
+    const baseName = path.basename(filePath, ext);
+
+    const pcKey = `${baseName}.avif`;
+    const mobileKey = `${baseName}_mobile.avif`;
+
+    // 両ファイルの存在状態を並列で確認
+    console.log("[INFO] 衝突チェック中...");
+    const [pcExists, mobileExists] = await Promise.all([
+        objectExists(pcKey),
+        objectExists(mobileKey),
+    ]);
+
+    if (pcExists && mobileExists) {
+        // 両方とも存在 → 前回の完全なアップロード済みと判断
+        console.log("[INFO] 両ファイルはR2上に既にアップロードされています。");
+        console.log(`  PC版 URL:      ${CONFIG.publicBaseUrl}/${pcKey}`);
+        console.log(`  モバイル版 URL: ${CONFIG.publicBaseUrl}/${mobileKey}`);
+        return;
+    } else if (pcExists || mobileExists) {
+        // 片方だけ存在 → 前回のアップロードが途中で失敗した可能性
+        const existing = pcExists ? pcKey : mobileKey;
+        const missing = pcExists ? mobileKey : pcKey;
+        console.error(`[エラー] ${existing} はR2上に存在しますが、${missing} がありません。`);
+        console.error("前回のアップロードが途中で失敗した可能性があります。");
+        console.error(`R2から ${existing} を削除してから再実行してください。`);
+        process.exit(1);
+    }
+
+    // PC版: フルサイズ → AVIF (quality 80)
+    console.log("[INFO] PC版 AVIF に変換中...");
+    const pcBuffer = await sharp(filePath)
+        .avif({ quality: 80 })
+        .toBuffer();
+
+    // モバイル版: 最大幅 750px にリサイズ → AVIF (quality 65)
+    console.log("[INFO] モバイル版 AVIF に変換中（最大幅 750px）...");
+    const mobileBuffer = await sharp(filePath)
+        .resize({ width: 750, withoutEnlargement: true })
+        .avif({ quality: 65 })
+        .toBuffer();
+
+    // アップロード
+    await putObject(pcKey, pcBuffer, "image/avif");
+    await putObject(mobileKey, mobileBuffer, "image/avif");
+
+    // ローカルの元ファイルを削除
+    fs.unlinkSync(filePath);
+    console.log(`[INFO] ローカルファイルを削除しました: ${filePath}`);
+
+    console.log("\n[完了]");
+    console.log(`  PC版 URL:      ${CONFIG.publicBaseUrl}/${pcKey}`);
+    console.log(`  モバイル版 URL: ${CONFIG.publicBaseUrl}/${mobileKey}\n`);
+}
+
+// 非画像ファイル: そのままアップロード
+async function uploadFile(filePath) {
+    const fileName = path.basename(filePath);
+
+    await checkConflict(fileName);
+
+    const fileBuffer = fs.readFileSync(filePath);
+    await putObject(fileName, fileBuffer);
+
+    fs.unlinkSync(filePath);
+    console.log(`[INFO] ローカルファイルを削除しました: ${filePath}`);
+
+    console.log(`\n[完了] 公開URL: ${CONFIG.publicBaseUrl}/${fileName}\n`);
+}
+
 async function upload(filePath) {
-    // ファイル存在チェック
     if (!fs.existsSync(filePath)) {
         console.error(`[エラー] ファイルが見つかりません: ${filePath}`);
         process.exit(1);
     }
 
-    const fileName = path.basename(filePath);
-
-    // R2上に同名ファイルが存在するか確認
-    console.log(`[INFO] ファイル名の衝突チェック中: ${fileName}`);
-    try {
-        await client.send(
-            new HeadObjectCommand({
-                Bucket: CONFIG.bucketName,
-                Key: fileName,
-            })
-        );
-        // 例外が出なければ既に存在する
-        console.error(`[エラー] 同名のファイルがR2上に既に存在します: ${fileName}`);
-        console.error("アップロードを中止しました。ファイル名を変更してから再実行してください。");
-        process.exit(1);
-    } catch (err) {
-        if (err.name !== "NotFound" && err.$metadata?.httpStatusCode !== 404) {
-            throw err; // 404以外のエラーは再スロー
-        }
-        // 404 = 存在しない = 衝突なし、続行
+    if (isImage(filePath)) {
+        console.log(`[INFO] 画像ファイルを検出しました。AVIF変換モードで処理します。`);
+        await uploadImage(filePath);
+    } else {
+        await uploadFile(filePath);
     }
-
-    const fileBuffer = fs.readFileSync(filePath);
-
-    console.log(`[INFO] アップロード中: ${fileName}`);
-
-    // R2へアップロード
-    await client.send(
-        new PutObjectCommand({
-            Bucket: CONFIG.bucketName,
-            Key: fileName,
-            Body: fileBuffer,
-        })
-    );
-
-    console.log(`[INFO] アップロード完了`);
-
-    // ローカルファイル削除
-    fs.unlinkSync(filePath);
-    console.log(`[INFO] ローカルファイルを削除しました: ${filePath}`);
-
-    // 公開URLを表示
-    const publicUrl = `${CONFIG.publicBaseUrl}/${fileName}`;
-    console.log(`\n[完了] 公開URL: ${publicUrl}\n`);
 }
 
 // 引数チェック
 const filePath = process.argv[2];
 if (!filePath) {
     console.error("[エラー] ファイルパスを引数で指定してください。");
-    console.error("使い方: node upload_to_r2.js C:\\path\\to\\file.txt");
+    console.error("使い方: node upload.js /path/to/image.png");
     process.exit(1);
 }
 

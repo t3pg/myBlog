@@ -1,17 +1,14 @@
 import { ListObjectsV2Command, S3Client } from "@aws-sdk/client-s3";
 import { existsSync, readFileSync } from "node:fs";
-import { dirname, join } from "node:path";
-import { fileURLToPath } from "node:url";
-import { visit } from "unist-util-visit";
-
-const __dirname = dirname(fileURLToPath(import.meta.url));
+import { join } from "node:path";
+import { SKIP, visit } from "unist-util-visit";
 
 // ビルド中に共有するモバイル画像キーの一覧と公開 URL
 const mobileImageKeys = new Set();
 let r2PublicBaseUrl = "";
 
 function loadR2Env() {
-    const envPath = join(__dirname, "../../R2/.env");
+    const envPath = join(process.cwd(), "R2/.env");
     if (!existsSync(envPath)) return;
     for (const line of readFileSync(envPath, "utf-8").split("\n")) {
         const trimmed = line.trim();
@@ -76,7 +73,7 @@ export function r2ResponsiveImageIntegration() {
                 try {
                     await scanR2(logger);
                 } catch (err) {
-                    logger.warn(`R2 スキャン中にエラーが発生しました: ${err.message}`);
+                    logger.warn(`R2 スキャン中にエラーが発生しました: ${err instanceof Error ? err.message : String(err)}`);
                     // 部分的に設定された状態をリセットして rehype が安全にスキップできるようにする
                     r2PublicBaseUrl = "";
                     mobileImageKeys.clear();
@@ -138,9 +135,11 @@ export function rehypeResponsiveImage() {
                         },
                         children: [],
                     },
-                    { ...node, properties: { ...node.properties } },
+                    // position を除外してコピーし後続プラグインへの副作用を防ぐ
+                    { ...node, position: undefined, properties: { ...node.properties } },
                 ],
             };
+            return [SKIP, index + 1];
         });
     };
 }

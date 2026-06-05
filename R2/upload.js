@@ -62,9 +62,9 @@ const client = new S3Client({
     },
 });
 
-// sharp が対応している画像形式
+// AVIF 変換対象の画像形式（.gif はアニメーション消失のため除外）
 const IMAGE_EXTENSIONS = new Set([
-    ".jpg", ".jpeg", ".png", ".webp", ".gif",
+    ".jpg", ".jpeg", ".png", ".webp",
     ".tiff", ".tif", ".avif", ".heic", ".heif",
 ]);
 
@@ -134,22 +134,25 @@ async function uploadImage(filePath) {
         process.exit(1);
     }
 
-    // PC版: フルサイズ → AVIF (quality 80)
-    console.log("[INFO] PC版 AVIF に変換中...");
-    const pcBuffer = await sharp(filePath)
-        .avif({ quality: 80 })
-        .toBuffer();
+    // PC版・モバイル版を並列変換
+    console.log("[INFO] AVIF 変換中（PC版・モバイル版）...");
+    let pcBuffer, mobileBuffer;
+    try {
+        [pcBuffer, mobileBuffer] = await Promise.all([
+            sharp(filePath).avif({ quality: 80 }).toBuffer(),
+            sharp(filePath).resize({ width: 750, withoutEnlargement: true }).avif({ quality: 65 }).toBuffer(),
+        ]);
+    } catch (err) {
+        console.error(`[エラー] 画像変換に失敗しました: ${err instanceof Error ? err.message : String(err)}`);
+        console.error("ファイルが破損しているか、対応していない形式の可能性があります。");
+        process.exit(1);
+    }
 
-    // モバイル版: 最大幅 750px にリサイズ → AVIF (quality 65)
-    console.log("[INFO] モバイル版 AVIF に変換中（最大幅 750px）...");
-    const mobileBuffer = await sharp(filePath)
-        .resize({ width: 750, withoutEnlargement: true })
-        .avif({ quality: 65 })
-        .toBuffer();
-
-    // アップロード
-    await putObject(pcKey, pcBuffer, "image/avif");
-    await putObject(mobileKey, mobileBuffer, "image/avif");
+    // PC版・モバイル版を並列アップロード
+    await Promise.all([
+        putObject(pcKey, pcBuffer, "image/avif"),
+        putObject(mobileKey, mobileBuffer, "image/avif"),
+    ]);
 
     // ローカルの元ファイルを削除
     fs.unlinkSync(filePath);

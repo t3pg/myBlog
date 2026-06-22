@@ -31,8 +31,10 @@ jobs:
 
       - name: discordに送信
         if: steps.check.outputs.should_notify == 'true'
+        env:
+          WEBHOOK_URL: ${{ secrets.WEBHOOK_URL }}
         run: |
-          curl -X POST ${{ secrets.WEBHOOK_URL }} \
+          curl -X POST "$WEBHOOK_URL" \
             -H 'Content-Type: application/json' \
             -d '{
               "content": "今日も記事を書こう！"

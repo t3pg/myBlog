@@ -40,7 +40,7 @@ export function extractYoutubeVideoId(rawUrl: string): string | null {
       return sanitizeVideoId(id);
     }
 
-    if (host.endsWith("youtube.com")) {
+    if (host === "youtube.com") {
       const paramsId = sanitizeVideoId(url.searchParams.get("v"));
       if (paramsId) return paramsId;
 

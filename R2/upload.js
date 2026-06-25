@@ -159,7 +159,7 @@ async function uploadImage(filePath) {
     console.log(`[INFO] ローカルファイルを削除しました: ${filePath}`);
 
     console.log("\n[完了]");
-    console.log(`  PC版 URL:      ${CONFIG.publicBaseUrl}/${pcKey}`);
+    console.log(`  PC版 URL:      ![](${CONFIG.publicBaseUrl}/${pcKey})`);
     console.log(`  モバイル版 URL: ${CONFIG.publicBaseUrl}/${mobileKey}\n`);
 }
 

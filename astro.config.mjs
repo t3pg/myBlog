@@ -6,6 +6,7 @@ import { fileURLToPath } from 'node:url';
 
 import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
+import { unified } from '@astrojs/markdown-remark';
 import { defineConfig } from 'astro/config';
 import astroExpressiveCode from 'astro-expressive-code';
 import remarkLinkCard from 'remark-link-card-plus';
@@ -81,13 +82,15 @@ export default defineConfig({
 		}),
 	],
 	markdown: {
-		rehypePlugins: [rehypeResponsiveImage],
-		remarkPlugins: [
-			remarkYoutube,
-			[remarkLinkCard, { cache: true }],
-			remarkDirective,
-			remarkCustomDirective,
-			remarkEmoji,
-		],
+		processor: unified({
+			rehypePlugins: [rehypeResponsiveImage],
+			remarkPlugins: [
+				remarkYoutube,
+				[remarkLinkCard, { cache: true }],
+				remarkDirective,
+				remarkCustomDirective,
+				remarkEmoji,
+			],
+		}),
 	},
 });

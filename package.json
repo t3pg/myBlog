@@ -12,7 +12,7 @@
     "@astrojs/mdx": "^5.0.4",
     "@astrojs/rss": "^4.0.15",
     "@astrojs/sitemap": "^3.7.0",
-    "@astrojs/starlight": "^0.39.2",
+    "astro-expressive-code": "^0.42.0",
     "@aws-sdk/client-s3": "^3.1057.0",
     "astro": "^6.4.8",
     "astro-mermaid": "^2.0.1",

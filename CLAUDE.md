@@ -132,3 +132,31 @@ npm run dev      # 開発サーバー起動
 npm run build    # 本番ビルド
 npm run preview  # ビルド結果のプレビュー
 ```
+
+## 改善点（TODO候補）
+
+コードベース調査で見つかった改善点。重要度順。着手時はこのセクションの該当項目を更新・削除すること。
+
+### 高
+
+- **品質保証の仕組みが皆無**: `package.json` に ESLint/Prettier/Vitest 等の devDependencies が無く、設定ファイルも無い。`.github/workflows/main.yml` は更新をDiscordに通知するのみで、ビルド・型チェック・lintをCIで実行していない。壊れたコードがそのまま本番デプロイされ得る。
+- **`src/pages/about.astro`**: `<main id="main-content"></main>` のみで本文が無い空ページが本番公開中。SEO・UX上望ましくない。
+
+### 中
+
+- **OGP画像が全ページ共通**: `src/components/BaseHead.astro` で `heroImage` 未指定時のフォールバック画像が固定URLで、記事ごとの `og:image` / `twitter:image` の作り分けが弱い。
+- **`src/plugins/responsiveImage.mjs`**: `<img>` を `<picture>` に変換する際 width/height/aspect-ratio を付与しておらず、CLS（レイアウトシフト）対策が弱い。
+- **`src/pages/books/index.astro`(9-15行目)**: `books.csv` を `split("\n")` → `split(",")` の素朴な自前パースをしており、フィールド内にカンマを含むデータがあると壊れる。
+- **記事一覧マークアップの重複**: `src/components/PostList.astro` と `src/pages/index.astro` がほぼ同一の記事一覧マークアップ・CSS（`post-row` / `post-title` / `post-tag`）を重複実装している。`PostList` に統一すべき。
+
+### 低
+
+- **Google Analytics**: `BaseHead.astro` で同意取得なしに全ページ無条件でロードしている。プライバシー配慮の余地あり。
+- **依存パッケージの自動更新**: Dependabot/Renovate等が未設定で、更新が手動任せになっている。
+
+### 良い点（維持すること）
+
+- `tsconfig.json` は strict 設定
+- `Header.astro` に skip-link・aria-label あり
+- JSON-LD構造化データ、sitemap、RSSを実装済み
+- `.env` / R2認証情報は `.gitignore` 済みで漏洩なし
